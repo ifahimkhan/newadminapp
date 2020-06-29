@@ -2,6 +2,7 @@ package com.fahim.newapp.network;
 
 
 import com.fahim.newapp.holder.ResponseStandardHolder;
+import com.fahim.newapp.holder.ResponseSubjectHolder;
 import com.fahim.newapp.holder.StandardHolder;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public interface APICall {
                                                   @Query("standardName") String stdname);
 
 
+    @GET("index.php")
+    Call<ResponseSubjectHolder> callReadSubject(@Query("api") String api);
 
     /*
     @GET("ValidateUser")

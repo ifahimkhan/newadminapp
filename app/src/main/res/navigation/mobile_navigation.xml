@@ -15,7 +15,7 @@
         android:id="@+id/navigation_subject"
         android:name="com.fahim.newapp.ui.subject.SubjectFragment"
         android:label="@string/title_subject"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_subject" />
 
     <fragment
         android:id="@+id/navigation_books"

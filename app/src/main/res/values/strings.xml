@@ -36,5 +36,6 @@
     <string name="t_create_standard">Create New Standard</string>
     <string name="save">Save</string>
     <string name="hint_enter_std_name">Enter Standard Name</string>
+    <string name="t_no_sub_found">No Subject Found</string>
 
 </resources>
