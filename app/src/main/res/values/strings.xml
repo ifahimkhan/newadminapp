@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">new app</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+
+
+    <string name="w_permission_denied">Permission Denied!</string>
+    <string name="s_permission_request">Please Grant Phone Permission</string>
+    <string name="e_error">Error occurred!</string>
+    <string name="s_phone_permission">Please Grant Phone Permission!</string>
+    <string name="e_phone_permission">Please Grant Phone Permission!</string>
+    <string name="w_loading">Loading</string>
+    <string name="w_permission_storage">\"Please Grant Storage Permission! \"</string>
+    <string name="s_permission_location">\"Please Grant Location Permission! \"</string>
+    <string name="s_permission_camera">\"Please Grant Camera Permission! \"</string>
+    <string name="w_success">Success!</string>
+    <string name="w_ok">OK</string>
+    <string name="t_no_std_found">No standard Found</string>
+    <string name="failed">Server Error</string>
+    <string name="t_loading">Loading...</string>
+    <string name="title_standard">Standard</string>
+    <string name="title_subject">Subject</string>
+    <string name="title_books">Books</string>
+    <string name="t_edit_standard">Edit Standard Name</string>
+    <string name="t_create_standard">Create New Standard</string>
+    <string name="save">Save</string>
+    <string name="hint_enter_std_name">Enter Standard Name</string>
+
+</resources>

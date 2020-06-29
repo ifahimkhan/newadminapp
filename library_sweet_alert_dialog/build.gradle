@@ -1,0 +1,23 @@
+apply plugin: 'com.android.library'
+
+
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+    defaultConfig {
+
+        minSdkVersion 15
+        targetSdkVersion 28
+
+        multiDexEnabled true
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation project(':library_materialish_progress')
+}
+

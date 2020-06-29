@@ -1,0 +1,2 @@
+rootProject.name='new app'
+include ':app', ':library_sweet_alert_dialog', ':library_materialish_progress'
