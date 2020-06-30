@@ -1,5 +1,6 @@
 package com.fahim.newapp.ui.subject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +23,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.Interface.FragmentClickListener;
+import com.fahim.newapp.MainActivity;
 import com.fahim.newapp.R;
 import com.fahim.newapp.adapter.CustomSpinnerStandardAdapter;
+import com.fahim.newapp.adapter.StandardAdapter;
 import com.fahim.newapp.adapter.SubjectAdapter;
 import com.fahim.newapp.database.DAO;
 import com.fahim.newapp.holder.StandardHolder;
@@ -37,26 +40,47 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class SubjectFragment extends Fragment implements AdapterClickListener, FragmentClickListener {
 
-    private Preferences preferences=new Preferences();
+    private Preferences preferences = new Preferences();
     private SubjectViewModel subjectViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private Spinner spinner;
     private CustomSpinnerStandardAdapter standardAdapter;
-    private ViewGroup container;
+//    private ViewGroup container;
     private SubjectAdapter subjectAdapter;
     private Thread thread;
-    private ArrayList<StandardHolder> spinnerList=new ArrayList<>();
-    private List<StandardHolder> standardHolderList=new ArrayList<StandardHolder>();
+    private ArrayList<StandardHolder> spinnerList = new ArrayList<>();
+    private List<SubjectHolder> subjectHolderList = new ArrayList<SubjectHolder>();
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("TAG", "onAttach: ");
+        ((MainActivity) getActivity()).setFragmentClickListener(this);
+    }
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         subjectViewModel =
                 ViewModelProviders.of(this).get(SubjectViewModel.class);
         View root = inflater.inflate(R.layout.fragment_subject, container, false);
-
-        this.container=container;
         subjectViewModel.setContext(getActivity());
 
+        Log.e(TAG, "onCreateView: Subject");
+
+
+        swipeRefreshLayout = root.findViewById(R.id.swipe_to_refresh_subject);
+        spinner = root.findViewById(R.id.standard_spinner);
+        subjectAdapter = new SubjectAdapter(getActivity(), subjectHolderList, this);
+
+        recyclerView = root.findViewById(R.id.recyclerview_subject);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+        recyclerView.setAdapter(subjectAdapter);
 
 
         return root;
@@ -65,28 +89,26 @@ public class SubjectFragment extends Fragment implements AdapterClickListener, F
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        swipeRefreshLayout=container.findViewById(R.id.swipe_to_refresh_subject);
-        spinner=container.findViewById(R.id.standard_spinner);
-        recyclerView=container.findViewById(R.id.recyclerview_subject);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        subjectAdapter=new SubjectAdapter(getActivity(),new ArrayList<SubjectHolder>(),this);
-        recyclerView.setAdapter(subjectAdapter);
-
-
-        standardAdapter = new CustomSpinnerStandardAdapter(getActivity(), R.layout.custom_spinner_layout, spinnerList);
-        spinner.setAdapter(standardAdapter);
+        Log.e(TAG, "onActivityCreated: Subject" + Thread.currentThread().getName());
 
 
 
+        subjectViewModel.getStandardHolder(false).observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
+            @Override
+            public void onChanged(List<StandardHolder> list) {
+                spinnerList.addAll(list);
+                standardAdapter = new CustomSpinnerStandardAdapter(getActivity(), R.layout.custom_spinner_layout, spinnerList);
+                spinner.setAdapter(standardAdapter);
+                standardAdapter.notifyDataSetChanged();
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                preferences.putSelectedStandardId(getActivity(),spinnerList.get(position).getId());
-                Log.e(TAG, "onItemSelected: "+preferences.getSelectedStandardId(getActivity()) );
-                readSubjectData(true);
+                preferences.putSelectedStandardId(getActivity(), spinnerList.get(position).getId());
+                Log.e(TAG, "onItemSelected: " + preferences.getSelectedStandardId(getActivity()));
+                readSubjectData(false);
             }
 
             @Override
@@ -95,27 +117,17 @@ public class SubjectFragment extends Fragment implements AdapterClickListener, F
             }
         });
 
-
-
-        thread=new Thread(new Runnable() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void run() {
-
-                spinnerList.addAll(DAO.getInstance().getAllStandard());
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        standardAdapter.notifyDataSetChanged();
-                    }
-                });
+            public void onRefresh() {
+                readSubjectData(true);
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
-        thread.start();
-
 
     }
 
-    private void readSubjectData(boolean callApi){
+    private void readSubjectData(boolean callApi) {
         subjectViewModel.getSubjectHolder(callApi).observe(getViewLifecycleOwner(), new Observer<List<SubjectHolder>>() {
             @Override
             public void onChanged(List<SubjectHolder> subjectHolders) {
@@ -130,13 +142,31 @@ public class SubjectFragment extends Fragment implements AdapterClickListener, F
     @Override
     public void onClick(int id) {
 
+        switch (id){
+            case R.id.edit_subject:
+                Log.e("TAG", "onClick: edit_subject ");
+
+                break;
+            case R.id.delete_subject:
+                Log.e("TAG", "onClick: delete_subject ");
+
+                break;
+            case R.id.floatingbuttonsubject:
+                Log.e("TAG", "onClick: floatingbuttonsubject ");
+
+
+                break;
+            default:
+                Log.e(TAG, "onClick: "+"default" );
+                break;
+        }
+
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!thread.isInterrupted()){
-            thread.interrupt();
-        }
+
+
     }
 }

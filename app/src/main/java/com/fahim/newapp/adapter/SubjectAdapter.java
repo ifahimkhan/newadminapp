@@ -35,7 +35,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.standard_layout, parent, false);
+                .inflate(R.layout.subject_layout, parent, false);
 
 
         return new ViewHolder(view);
@@ -50,7 +50,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 preferences.putSelectedStandardId(context,model.getId());
-                listener.onClick(R.id.delete_standard);
+                listener.onClick(R.id.delete_subject);
             }
         });
         holder.edit.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +58,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
             public void onClick(View v) {
                 preferences.putSelectedStandardId(context,model.getId());
                 preferences.putSelectedStandardName(context,model.getSubject_name());
-                listener.onClick(R.id.edit_standard);
+                listener.onClick(R.id.edit_subject);
             }
         });
     }
@@ -78,9 +78,9 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtstd = itemView.findViewById(R.id.standard_name);
-            delete=itemView.findViewById(R.id.delete_standard);
-            edit=itemView.findViewById(R.id.edit_standard);
+            txtstd = itemView.findViewById(R.id.subject_name);
+            delete=itemView.findViewById(R.id.delete_subject);
+            edit=itemView.findViewById(R.id.edit_subject);
 
 
 
