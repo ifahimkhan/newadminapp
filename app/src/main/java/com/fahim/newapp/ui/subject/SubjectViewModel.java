@@ -37,9 +37,28 @@ public class SubjectViewModel extends ViewModel {
     public LiveData<List<SubjectHolder>> getSubjectHolder(boolean callapi) {
         subjectRepository.setLoadingDialog();
         listMutableLiveData = (MutableLiveData<List<SubjectHolder>>) subjectRepository.callReadSubject(callapi);
-
         return listMutableLiveData;
     }
+    public LiveData<List<StandardHolder>> getStandardHolder(boolean callapi) {
+        subjectRepository.setLoadingDialog();
 
+
+        return  subjectRepository.callReadStandard(callapi);
+    }
+
+
+    public LiveData<List<SubjectHolder>> editSubject() {
+        subjectRepository.setLoadingDialog();
+        return  subjectRepository.callEditStandard();
+    }
+    public LiveData<List<SubjectHolder>> createSubject() {
+        subjectRepository.setLoadingDialog();
+        return subjectRepository.callCreateSubject();
+    }
+
+    public LiveData<List<SubjectHolder>> deleteSubject() {
+        subjectRepository.setLoadingDialog();
+        return subjectRepository.callDeleteSubject();
+    }
 
 }

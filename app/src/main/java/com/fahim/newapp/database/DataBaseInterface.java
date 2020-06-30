@@ -25,6 +25,7 @@ public interface DataBaseInterface {
     final String BOOKS_ID="id";
     final String BOOKS_STANDARD_ID="standard_id";
     final String Books_SUBJECT_ID="subject_id";
+    final String BOOKS_NAME="book_name";
     final String BOOKS_LINK="books_Links";
     final String BOOKS_VIEW_COUNT="view_count";
 

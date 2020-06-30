@@ -12,20 +12,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.R;
-import com.fahim.newapp.holder.StandardHolder;
+import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.SubjectHolder;
 import com.fahim.newapp.utils.Preferences;
 
 import java.util.List;
 
-public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     private Context context;
-    private List<SubjectHolder> standardholderList;
+    private List<BookHolder> standardholderList;
     String swipedList = "";
     private Preferences preferences=new Preferences();
     private AdapterClickListener listener;
 
-    public SubjectAdapter(Context context, List<SubjectHolder> userList, AdapterClickListener listener) {
+    public BookAdapter(Context context, List<BookHolder> userList, AdapterClickListener listener) {
         this.context = context;
         this.standardholderList = userList;
         this.listener=listener;
@@ -43,21 +43,22 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final SubjectHolder model = standardholderList.get(position);
+        final BookHolder model = standardholderList.get(position);
 
-        holder.txtstd.setText(model.getSubject_name());
+        holder.txtstd.setText(model.getBookname());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                preferences.putSelectedSubjectId(context,model.getId());
+                preferences.putSelectedBookId(context,model.getId());
                 listener.onClick(R.id.delete_subject);
             }
         });
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                preferences.putSelectedSubjectId(context,model.getId());
-                preferences.putSelectedSubjectName(context,model.getSubject_name());
+                preferences.putSelectedBookId(context,model.getId());
+                preferences.putSelectedSubjectName(context,model.getBookname());
+                preferences.putSelectedSubjectName(context,model.getBookname());
                 listener.onClick(R.id.edit_subject);
             }
         });
@@ -78,9 +79,9 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.ViewHold
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtstd = itemView.findViewById(R.id.subject_name);
-            delete=itemView.findViewById(R.id.delete_subject);
-            edit=itemView.findViewById(R.id.edit_subject);
+            txtstd = itemView.findViewById(R.id.book_name);
+            delete=itemView.findViewById(R.id.delete_book);
+            edit=itemView.findViewById(R.id.edit_book);
 
 
 

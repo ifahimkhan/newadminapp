@@ -1,6 +1,7 @@
 package com.fahim.newapp.network;
 
 
+import com.fahim.newapp.holder.ResponseBookHolder;
 import com.fahim.newapp.holder.ResponseStandardHolder;
 import com.fahim.newapp.holder.ResponseSubjectHolder;
 import com.fahim.newapp.holder.StandardHolder;
@@ -23,18 +24,37 @@ public interface APICall {
 
     @GET("index.php")
     Call<ResponseStandardHolder> callCreateStandard(@Query("api") String api,
-                                            @Query("standard") String std);
+                                                    @Query("standard") String std);
+
     @GET("index.php")
     Call<ResponseStandardHolder> callReadStandard(@Query("api") String api);
+
     @GET("index.php")
-    Call<ResponseStandardHolder> callDeleteStandard(@Query("api") String api,@Query("id") int id);
+    Call<ResponseStandardHolder> callDeleteStandard(@Query("api") String api, @Query("id") int id);
+
     @GET("index.php")
-    Call<ResponseStandardHolder> callEditStandard(@Query("api") String api,@Query("id") int id,
+    Call<ResponseStandardHolder> callEditStandard(@Query("api") String api, @Query("id") int id,
                                                   @Query("standardName") String stdname);
 
 
     @GET("index.php")
     Call<ResponseSubjectHolder> callReadSubject(@Query("api") String api);
+
+    @GET("index.php")
+    Call<ResponseSubjectHolder> callEditSubject(@Query("api") String api, @Query("subjectName") String name,
+                                                @Query("id") int id);
+
+    @GET("index.php")
+    Call<ResponseSubjectHolder> callCreateSubject(@Query("api") String api,
+                                                  @Query("subjectname") String subject,
+                                                  @Query("standard_id") int std);
+
+    @GET("index.php")
+    Call<ResponseSubjectHolder> callDeleteSubject(@Query("api") String api, @Query("id") int id);
+
+//BOOK TABLE
+    @GET("index.php")
+    Call<ResponseBookHolder> callReadBook(@Query("api") String api);
 
     /*
     @GET("ValidateUser")
@@ -187,7 +207,7 @@ public interface APICall {
                                             @Body HashMap<String, String> locationList);
 
     *//**
-        to test stock report with local url;
+     to test stock report with local url;
      *//*
     @GET
     Call<List<StockReportMainHolder>> getStockCheckTransactionAdvance(@Url String url,

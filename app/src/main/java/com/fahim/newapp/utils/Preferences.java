@@ -60,4 +60,61 @@ public class Preferences {
     public String getSelectedStandardName(Context context) {
         return getSharedPreferenceInstanced(context).getString("putSelectedStandardName", null);
     }
+
+    public void putSelectedSubjectId(Context context, int id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putInt("putSelectedSubjectId", id);
+        editor.apply();
+    }
+    public int getSelectedSubjectId(Context context) {
+        return getSharedPreferenceInstanced(context).getInt("putSelectedSubjectId", 0);
+    }
+
+    public void putSelectedSubjectName(Context context, String name) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putString("putSelectedSubjectName", name);
+        editor.apply();
+    }
+    public String getSelectedSubjectName(Context context) {
+        return getSharedPreferenceInstanced(context).getString("putSelectedSubjectName", null);
+    }
+
+    //BOOK
+    public void putSelectedBookId(Context context, int id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putInt("putSelectedBookId", id);
+        editor.apply();
+    }
+    public int getSelectedBookId(Context context) {
+        return getSharedPreferenceInstanced(context).getInt("putSelectedBookId", 0);
+    }
+
+    public void putSelectedBookName(Context context, int id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putInt("putSelectedBookName", id);
+        editor.apply();
+    }
+    public int getSelectedBookName(Context context) {
+        return getSharedPreferenceInstanced(context).getInt("putSelectedBookName", 0);
+    }
+
+    public void putSelectedBookLink(Context context, int id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putInt("putSelectedBookLink", id);
+        editor.apply();
+    }
+    public int getSelectedBookLink(Context context) {
+        return getSharedPreferenceInstanced(context).getInt("putSelectedBookLink", 0);
+    }
+    public void putSelectedBookCount(Context context, int id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putInt("putSelectedBookCount", id);
+        editor.apply();
+    }
+    public int getSelectedBookCount(Context context) {
+        return getSharedPreferenceInstanced(context).getInt("putSelectedBookCount", 0);
+    }
+
+
+
 }

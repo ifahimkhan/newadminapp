@@ -6,7 +6,9 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.StandardHolder;
+import com.fahim.newapp.holder.SubjectHolder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -123,8 +125,80 @@ public class DAO implements DataBaseInterface {
 
                     values.put(STANDARD_ID, standardHolder.getId());
                     values.put(STANDARD_NAME, standardHolder.getStandardName());
-                                       // Inserting Row
+                    // Inserting Row
                     db.insert(TABLE_STANDARD_HOLDER, null, values);
+
+                    //System.out.println("Stopped Inserting");
+
+
+                }
+
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                //System.out.println("Exception while inserting into  table" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+
+    }
+
+    public void insertSubjectList(List<SubjectHolder> list) {
+
+        Log.e(TAG, "StandardHolder: " + list.size());
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+
+                for (SubjectHolder holder : list) {
+                    ContentValues values = new ContentValues();
+
+                    values.put(SUBJECT_ID, holder.getId());
+                    values.put(SUBJECT_STANDARD_ID, holder.getStandard_id());
+                    values.put(SUBJECT_NAME, holder.getSubject_name());
+                    // Inserting Row
+                    db.insert(TABLE_SUBJECT_HOLDER, null, values);
+
+                    //System.out.println("Stopped Inserting");
+
+
+                }
+
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                //System.out.println("Exception while inserting into  table" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+
+    }
+
+    public void insertBookList(List<BookHolder> list) {
+
+        Log.e(TAG, "StandardHolder: " + list.size());
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+
+                for (BookHolder holder : list) {
+                    ContentValues values = new ContentValues();
+                    values.put(BOOKS_ID, holder.getId());
+                    values.put(BOOKS_STANDARD_ID, holder.getStandardid());
+                    values.put(Books_SUBJECT_ID, holder.getSubjectid());
+                    values.put(BOOKS_NAME, holder.getBookname());
+                    values.put(BOOKS_LINK, holder.getBooklink());
+                    values.put(BOOKS_VIEW_COUNT, holder.getViewCount());
+
+
+                    // Inserting Row
+                    db.insert(TABLE_BOOKS_HOLDER, null, values);
 
                     //System.out.println("Stopped Inserting");
 
@@ -351,39 +425,75 @@ public class DAO implements DataBaseInterface {
     }
 */
 
-public ArrayList<StandardHolder>  getAllStandard(){
-    {
-        synchronized (DBHelpers.lock) {
+    public ArrayList<StandardHolder> getAllStandard() {
+        {
+            synchronized (DBHelpers.lock) {
 
 
-            ArrayList<StandardHolder> list = new ArrayList<>();
+                ArrayList<StandardHolder> list = new ArrayList<>();
 
-            StandardHolder mHolder;
+                StandardHolder mHolder;
 
-            SQLiteDatabase db = dbHelper.getReadableDatabase();
-            Cursor c = db.rawQuery(new StringBuffer(SELECT_STANDARD_DATA).toString(), null);
-            list.clear();
-            if (c.moveToFirst()) {
-                do {
-                    //assigning values
-                    mHolder = new StandardHolder();
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                Cursor c = db.rawQuery(new StringBuffer(SELECT_STANDARD_DATA).toString(), null);
+                list.clear();
+                if (c.moveToFirst()) {
+                    do {
+                        //assigning values
+                        mHolder = new StandardHolder();
 
-                    mHolder.setId(c.getInt(c.getColumnIndex(STANDARD_ID)));
-                    mHolder.setStandardName(c.getString(c.getColumnIndex(STANDARD_NAME)));
+                        mHolder.setId(c.getInt(c.getColumnIndex(STANDARD_ID)));
+                        mHolder.setStandardName(c.getString(c.getColumnIndex(STANDARD_NAME)));
 
 
-                    //Do something Here with values
-                    list.add(mHolder);
-                } while (c.moveToNext());
+                        //Do something Here with values
+                        list.add(mHolder);
+                    } while (c.moveToNext());
+                }
+                c.close();
+                db.close();
+
+
+                return list;
             }
-            c.close();
-            db.close();
-
-
-            return list;
         }
     }
-}
+
+    public ArrayList<SubjectHolder> getAllSubject(int std) {
+        {
+            synchronized (DBHelpers.lock) {
+
+
+                ArrayList<SubjectHolder> list = new ArrayList<>();
+
+                SubjectHolder mHolder;
+
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                Cursor c = db.rawQuery(new StringBuffer(SELECT_SUBJECT_DATA).append(" where ")
+                        .append(SUBJECT_STANDARD_ID).append(" = ").append(std).toString(), null);
+                list.clear();
+                if (c.moveToFirst()) {
+                    do {
+                        //assigning values
+                        mHolder = new SubjectHolder();
+
+                        mHolder.setId(c.getInt(c.getColumnIndex(STANDARD_ID)));
+                        mHolder.setStandard_id(c.getInt(c.getColumnIndex(SUBJECT_STANDARD_ID)));
+                        mHolder.setSubject_name(c.getString(c.getColumnIndex(SUBJECT_NAME)));
+
+
+                        //Do something Here with values
+                        list.add(mHolder);
+                    } while (c.moveToNext());
+                }
+                c.close();
+                db.close();
+
+
+                return list;
+            }
+        }
+    }
 
 
     public void deleteAllStandardRows() {
@@ -406,6 +516,7 @@ public ArrayList<StandardHolder>  getAllStandard(){
             }
         }
     }
+
     public void deleteAllSubjectRows() {
 
         synchronized (DBHelpers.lock) {
@@ -426,6 +537,28 @@ public ArrayList<StandardHolder>  getAllStandard(){
             }
         }
     }
+
+    public void deleteSubjectIDRows(int id) {
+
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+                db.delete(TABLE_SUBJECT_HOLDER, SUBJECT_ID + "=?", new String[]{String.valueOf(id)});
+
+                db.setTransactionSuccessful();
+
+            } catch (Exception e) {
+
+                //System.out.println("Exception" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+    }
+
     public void deleteAllBooksRows() {
 
         synchronized (DBHelpers.lock) {
@@ -447,4 +580,44 @@ public ArrayList<StandardHolder>  getAllStandard(){
         }
     }
 
+    public ArrayList<BookHolder> getAllBooks(int selectedStandardId, int selectedSubjectId) {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<BookHolder> list = new ArrayList<>();
+
+            BookHolder mHolder;
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer(SELECT_BOOK_DATA).append(" where ")
+                    .append(BOOKS_STANDARD_ID).append(" = ").append(selectedStandardId)
+                    .append(" AND ")
+                    .append(Books_SUBJECT_ID).append(" = ").append(selectedSubjectId).toString(), null);
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    mHolder = new BookHolder();
+
+                    mHolder.setId(c.getInt(c.getColumnIndex(BOOKS_ID)));
+                    mHolder.setStandardid(c.getInt(c.getColumnIndex(BOOKS_STANDARD_ID)));
+                    mHolder.setSubjectid(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setViewCount(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setBookname(c.getString(c.getColumnIndex(BOOKS_NAME)));
+                    mHolder.setBooklink(c.getString(c.getColumnIndex(BOOKS_LINK)));
+
+
+                    //Do something Here with values
+                    list.add(mHolder);
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
+
+
+    }
 }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,15 +32,16 @@ import com.fahim.newapp.utils.QustomDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class StandardFragment extends Fragment implements AdapterClickListener, FragmentClickListener {
 
     private StandardViewModel standardViewModel;
     private RecyclerView recyclerView;
     private StandardAdapter standardAdapter;
     private ArrayList<StandardHolder> standardHolders = new ArrayList<StandardHolder>();
-    private Preferences preferences=new Preferences();
+    private Preferences preferences = new Preferences();
     private SwipeRefreshLayout swipeRefreshLayout;
-
 
 
     @Override
@@ -56,7 +58,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         standardViewModel.setContext(getActivity());
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        swipeRefreshLayout=root.findViewById(R.id.swipe_to_refresh);
+        swipeRefreshLayout = root.findViewById(R.id.swipe_to_refresh);
         recyclerView = root.findViewById(R.id.recyclerview_standard);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         standardAdapter = new StandardAdapter(getActivity(), standardHolders, this);
@@ -78,7 +80,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         return root;
     }
 
-    private void readStandardData(boolean callApi){
+    private void readStandardData(boolean callApi) {
 
         standardViewModel.getStandardHolder(callApi).observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
             @Override
@@ -90,6 +92,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
             }
         });
     }
+
     @Override
     public void onClick(int id) {
 
@@ -100,11 +103,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
                 displayCreateDialog();
 
                 break;
-            case R.id.floatingbuttonsubject:
-                Log.e("TAG", "onClick: floatingbuttonsubject ");
 
-
-                break;
             case R.id.floatingbuttonbooks:
                 Log.e("TAG", "onClick: floatingbuttonbooks ");
 
@@ -113,15 +112,33 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
 
             case R.id.delete_standard:
 
-                standardViewModel.deleteStandard().observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
+                final SweetAlertDialog dialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE);
+                dialog.setTitleText(getString(R.string.t_are_you_sure));
+                dialog.setContentText(getString(R.string.s_wont_be_able_to_recover));
+                dialog.setCancelText(getString(R.string.dialog_cancel));
+                dialog.showCancelButton(true);
+                dialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
-                    public void onChanged(List<StandardHolder> standardHolders) {
-                        Log.e("onChanged", "delete_standard");
-                        standardAdapter = new StandardAdapter(getActivity(), standardHolders, StandardFragment.this);
-                        recyclerView.setAdapter(standardAdapter);
-                        standardAdapter.notifyDataSetChanged();
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
                     }
                 });
+                dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(final SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismissWithAnimation();
+                        standardViewModel.deleteStandard().observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
+                            @Override
+                            public void onChanged(List<StandardHolder> standardHolders) {
+                                Log.e("onChanged", "delete_standard");
+                                standardAdapter = new StandardAdapter(getActivity(), standardHolders, StandardFragment.this);
+                                recyclerView.setAdapter(standardAdapter);
+                                standardAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                });
+                dialog.show();
                 break;
             case R.id.edit_standard:
                 displayEditDialog();
@@ -143,7 +160,6 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
     }
 
 
-
     public void displayEditDialog() {
         QustomDialogBuilder qustomDialogBuilder = new QustomDialogBuilder(getActivity());
 
@@ -154,7 +170,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         qustomDialogBuilder.setTitleColor(getResources().getColor(R.color.colorPrimary));
         qustomDialogBuilder.setDividerColor(getResources().getColor(R.color.colorPrimary));
         qustomDialogBuilder.setCancelable(true);
-        final EditText editText=alertLayout.findViewById(R.id.enter_std_name_edittext);
+        final EditText editText = alertLayout.findViewById(R.id.enter_std_name_edittext);
         editText.setText(preferences.getSelectedStandardName(getActivity()));
 
         qustomDialogBuilder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
@@ -167,9 +183,9 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (!TextUtils.isEmpty(editText.getText().toString())){
+                if (!TextUtils.isEmpty(editText.getText().toString())) {
 
-                    preferences.putSelectedStandardName(getActivity(),editText.getText().toString());
+                    preferences.putSelectedStandardName(getActivity(), editText.getText().toString());
                     editStandard();
                 }
 
@@ -181,6 +197,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         final AlertDialog alertDialog = qustomDialogBuilder.create();
         alertDialog.show();
     }
+
     public void displayCreateDialog() {
         QustomDialogBuilder qustomDialogBuilder = new QustomDialogBuilder(getActivity());
 
@@ -191,7 +208,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         qustomDialogBuilder.setTitleColor(getResources().getColor(R.color.colorPrimary));
         qustomDialogBuilder.setDividerColor(getResources().getColor(R.color.colorPrimary));
         qustomDialogBuilder.setCancelable(true);
-        final EditText editText=alertLayout.findViewById(R.id.enter_std_name_edittext);
+        final EditText editText = alertLayout.findViewById(R.id.enter_std_name_edittext);
 
 
         qustomDialogBuilder.setNegativeButton(getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
@@ -204,8 +221,8 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                if (!TextUtils.isEmpty(editText.getText().toString())){
-                    preferences.putSelectedStandardName(getActivity(),editText.getText().toString());
+                if (!TextUtils.isEmpty(editText.getText().toString())) {
+                    preferences.putSelectedStandardName(getActivity(), editText.getText().toString());
                     createStandard();
                 }
 
@@ -218,7 +235,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
         alertDialog.show();
     }
 
-    private void editStandard(){
+    private void editStandard() {
         standardViewModel.editStandard().observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
             @Override
             public void onChanged(List<StandardHolder> standardHolders) {
@@ -229,7 +246,8 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
             }
         });
     }
-    private void createStandard(){
+
+    private void createStandard() {
         standardViewModel.createStandard().observe(getViewLifecycleOwner(), new Observer<List<StandardHolder>>() {
             @Override
             public void onChanged(List<StandardHolder> standardHolders) {

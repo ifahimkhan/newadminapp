@@ -27,7 +27,7 @@ public class RetrofitConfig {
             retrofit = new Retrofit.Builder()
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl("http://192.168.0.111:8080/webApi/")
+                    .baseUrl("http://192.168.0.111:8012/webApi/")
                     .build();
         }
 

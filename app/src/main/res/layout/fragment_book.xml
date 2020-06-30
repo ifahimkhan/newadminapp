@@ -7,7 +7,7 @@
     tools:context=".ui.standard.StandardFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_to_refresh_subject"
+        android:id="@+id/swipe_to_refresh_book"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -53,7 +53,56 @@
 
                     <Spinner
                         android:layout_gravity="center_vertical"
-                        android:id="@+id/standard_spinner"
+                        android:id="@+id/standard_spinner_b"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:layout_marginRight="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:paddingTop="@dimen/_4sdp"
+                        android:paddingBottom="@dimen/_4sdp"
+                        android:textSize="@dimen/_16sdp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_4sdp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:elevation="@dimen/_2sdp"
+                app:cardBackgroundColor="#AAFFFFFF">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_32sdp"
+                    android:orientation="horizontal">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:layout_marginRight="@dimen/_4sdp"
+                        android:layout_weight="1"
+                        android:enabled="true"
+                        android:inputType="none"
+                        android:paddingTop="@dimen/_4sdp"
+                        android:paddingBottom="@dimen/_4sdp"
+                        android:text="@string/title_subject"
+                        android:textColor="@color/google_red"
+                        android:textCursorDrawable="@color/google_red"
+                        android:textSize="@dimen/_16sdp" />
+
+                    <Spinner
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/subject_spinner_b"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/_4sdp"
@@ -67,7 +116,7 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_subject"
+                android:id="@+id/recyclerview_book"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/_16sdp" />

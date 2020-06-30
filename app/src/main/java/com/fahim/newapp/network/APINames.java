@@ -6,6 +6,12 @@ public interface APINames {
     public String UPDATE_STANDARD_API="updateStandard";
     public String CREATE_STANDARD_API="createStandard";
 
+    public String CREATE_SUBJECT_API="createSubject";
     public String READ_SUBJECT_API="readSubject";
+    public String UPDATE_SUBJECT_API="updateSubject";
+    public String Delete_SUBJECT_API="deleteSubject";
+
+    public String READ_BOOK_API="readBook";
+
 
 }

@@ -30,29 +30,29 @@ import retrofit2.Response;
 
 public class StandardRepository {
 
-private APICall apiCall;
-private Preferences preferences =new Preferences();
-private SweetAlertDialog loadingDialog;
-private Context context;
+    private APICall apiCall;
+    private Preferences preferences = new Preferences();
+    private SweetAlertDialog loadingDialog;
+    private Context context;
 
     StandardRepository(Context context) {
         this.context = context;
-        apiCall = RetrofitConfig.getClient( this.context).create(APICall.class);
+        apiCall = RetrofitConfig.getClient(this.context).create(APICall.class);
 
     }
 
 
-    public void setLoadingDialog(){
-        loadingDialog=new SweetAlertDialog( this.context,SweetAlertDialog.PROGRESS_TYPE);
-        loadingDialog.getProgressHelper().setBarColor(ContextCompat.getColor( this.context,R.color.colorAccent));
+    public void setLoadingDialog() {
+        loadingDialog = new SweetAlertDialog(this.context, SweetAlertDialog.PROGRESS_TYPE);
+        loadingDialog.getProgressHelper().setBarColor(ContextCompat.getColor(this.context, R.color.colorAccent));
         loadingDialog.setTitleText(context.getString(R.string.t_loading));
     }
 
-    public LiveData<List<StandardHolder>> callReadStandard(boolean callapi){
+    public LiveData<List<StandardHolder>> callReadStandard(boolean callapi) {
 
         final MutableLiveData<List<StandardHolder>> data = new MutableLiveData<>();
 
-        if (callapi){
+        if (callapi) {
             loadingDialog.show();
             apiCall.callReadStandard(APINames.READ_STANDARD_API).enqueue(new Callback<ResponseStandardHolder>() {
                 @Override
@@ -64,13 +64,13 @@ private Context context;
                             .setConfirmClickListener(null)
                             .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
-                    if (response.body().isStatus()){
+                    if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
                         DAO.getInstance().deleteAllStandardRows();
                         DAO.getInstance().insertStandardList(response.body().getResponse());
                         data.setValue(response.body().getResponse());
-                    }else{
+                    } else {
                         data.setValue(null);
-                        new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE)
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(context.getString(R.string.t_no_std_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -95,19 +95,18 @@ private Context context;
                     data.setValue(null);
 
 
-
                 }
             });
-        }
-        else{
+        } else {
             data.setValue(DAO.getInstance().getAllStandard());
         }
         return data;
     }
-    public LiveData<List<StandardHolder>> callDeleteStandard(){
+
+    public LiveData<List<StandardHolder>> callDeleteStandard() {
         loadingDialog.show();
         final MutableLiveData<List<StandardHolder>> data = new MutableLiveData<>();
-        apiCall.callDeleteStandard(APINames.Delete_STANDARD_API,preferences.getSelectedStandardId(context)).enqueue(new Callback<ResponseStandardHolder>() {
+        apiCall.callDeleteStandard(APINames.Delete_STANDARD_API, preferences.getSelectedStandardId(context)).enqueue(new Callback<ResponseStandardHolder>() {
             @Override
             public void onResponse(Call<ResponseStandardHolder> call, Response<ResponseStandardHolder> response) {
 
@@ -117,14 +116,16 @@ private Context context;
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
-                if (response.body().isStatus()){
+                if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+                    DAO.getInstance().deleteAllStandardRows();
+                    DAO.getInstance().insertStandardList(response.body().getResponse());
 
                     data.setValue(response.body().getResponse());
 
 
-                }else{
+                } else {
                     data.setValue(null);
-                    new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE)
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(context.getString(R.string.t_no_std_found))
                             .setContentText(response.body().getMessage())
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -148,17 +149,16 @@ private Context context;
                 data.setValue(null);
 
 
-
             }
         });
 
         return data;
     }
 
-    public LiveData<List<StandardHolder>> callEditStandard(){
+    public LiveData<List<StandardHolder>> callEditStandard() {
         loadingDialog.show();
         final MutableLiveData<List<StandardHolder>> data = new MutableLiveData<>();
-        apiCall.callEditStandard(APINames.UPDATE_STANDARD_API,preferences.getSelectedStandardId(context),preferences.getSelectedStandardName(context)).enqueue(new Callback<ResponseStandardHolder>() {
+        apiCall.callEditStandard(APINames.UPDATE_STANDARD_API, preferences.getSelectedStandardId(context), preferences.getSelectedStandardName(context)).enqueue(new Callback<ResponseStandardHolder>() {
             @Override
             public void onResponse(Call<ResponseStandardHolder> call, Response<ResponseStandardHolder> response) {
 
@@ -168,14 +168,17 @@ private Context context;
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
-                if (response.body().isStatus()){
+                if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+
+                    DAO.getInstance().deleteAllStandardRows();
+                    DAO.getInstance().insertStandardList(response.body().getResponse());
 
                     data.setValue(response.body().getResponse());
 
 
-                }else{
+                } else {
                     data.setValue(null);
-                    new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE)
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(context.getString(R.string.t_no_std_found))
                             .setContentText(response.body().getMessage())
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -199,13 +202,13 @@ private Context context;
                 data.setValue(null);
 
 
-
             }
         });
 
         return data;
     }
-    public LiveData<List<StandardHolder>> callCreateStandard(){
+
+    public LiveData<List<StandardHolder>> callCreateStandard() {
         loadingDialog.show();
         final MutableLiveData<List<StandardHolder>> data = new MutableLiveData<>();
         apiCall.callCreateStandard(APINames.CREATE_STANDARD_API,
@@ -219,14 +222,16 @@ private Context context;
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
-                if (response.body().isStatus()){
+                if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+                    DAO.getInstance().deleteAllStandardRows();
+                    DAO.getInstance().insertStandardList(response.body().getResponse());
 
                     data.setValue(response.body().getResponse());
 
 
-                }else{
+                } else {
                     data.setValue(null);
-                    new SweetAlertDialog(context,SweetAlertDialog.WARNING_TYPE)
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText(context.getString(R.string.t_no_std_found))
                             .setContentText(response.body().getMessage())
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -248,7 +253,6 @@ private Context context;
                         .setConfirmClickListener(null)
                         .changeAlertType(SweetAlertDialog.ERROR_TYPE);
                 data.setValue(null);
-
 
 
             }
