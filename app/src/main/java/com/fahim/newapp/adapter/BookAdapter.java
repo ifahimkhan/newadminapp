@@ -20,14 +20,14 @@ import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     private Context context;
-    private List<BookHolder> standardholderList;
+    private List<BookHolder> holdersList;
     String swipedList = "";
     private Preferences preferences=new Preferences();
     private AdapterClickListener listener;
 
     public BookAdapter(Context context, List<BookHolder> userList, AdapterClickListener listener) {
         this.context = context;
-        this.standardholderList = userList;
+        this.holdersList = userList;
         this.listener=listener;
     }
 
@@ -35,7 +35,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.subject_layout, parent, false);
+                .inflate(R.layout.book_layout, parent, false);
 
 
         return new ViewHolder(view);
@@ -43,30 +43,30 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final BookHolder model = standardholderList.get(position);
+        final BookHolder model = holdersList.get(position);
 
         holder.txtstd.setText(model.getBookname());
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preferences.putSelectedBookId(context,model.getId());
-                listener.onClick(R.id.delete_subject);
+                listener.onClick(R.id.delete_book);
             }
         });
         holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preferences.putSelectedBookId(context,model.getId());
-                preferences.putSelectedSubjectName(context,model.getBookname());
-                preferences.putSelectedSubjectName(context,model.getBookname());
-                listener.onClick(R.id.edit_subject);
+                preferences.putSelectedBookName(context,model.getBookname());
+                preferences.putSelectedBookLink(context,model.getBooklink());
+                listener.onClick(R.id.edit_book);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return standardholderList == null ? 0 : standardholderList.size();
+        return holdersList == null ? 0 : holdersList.size();
     }
 
 

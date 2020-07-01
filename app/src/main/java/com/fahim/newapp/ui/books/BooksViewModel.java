@@ -46,4 +46,17 @@ public class BooksViewModel extends ViewModel {
         return bookRepository.callReadBook(callapi);
     }
 
+    public LiveData<List<BookHolder>> editBook() {
+        bookRepository.setLoadingDialog();
+        return  bookRepository.callEditBook();
+    }
+    public LiveData<List<BookHolder>> createBook(BookHolder bookHolder) {
+        bookRepository.setLoadingDialog();
+        return  bookRepository.callCreateBook(bookHolder);
+    }
+
+    public LiveData<List<BookHolder>> deleteBook() {
+        bookRepository.setLoadingDialog();
+        return bookRepository.callDeleteBook();
+    }
 }

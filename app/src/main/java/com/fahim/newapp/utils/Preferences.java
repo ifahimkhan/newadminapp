@@ -89,22 +89,22 @@ public class Preferences {
         return getSharedPreferenceInstanced(context).getInt("putSelectedBookId", 0);
     }
 
-    public void putSelectedBookName(Context context, int id) {
+    public void putSelectedBookName(Context context, String name) {
         SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
-        editor.putInt("putSelectedBookName", id);
+        editor.putString("putSelectedBookName", name);
         editor.apply();
     }
-    public int getSelectedBookName(Context context) {
-        return getSharedPreferenceInstanced(context).getInt("putSelectedBookName", 0);
+    public String getSelectedBookName(Context context) {
+        return getSharedPreferenceInstanced(context).getString("putSelectedBookName", "");
     }
 
-    public void putSelectedBookLink(Context context, int id) {
+    public void putSelectedBookLink(Context context, String id) {
         SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
-        editor.putInt("putSelectedBookLink", id);
+        editor.putString("putSelectedBookLink", id);
         editor.apply();
     }
-    public int getSelectedBookLink(Context context) {
-        return getSharedPreferenceInstanced(context).getInt("putSelectedBookLink", 0);
+    public String getSelectedBookLink(Context context) {
+        return getSharedPreferenceInstanced(context).getString("putSelectedBookLink", "");
     }
     public void putSelectedBookCount(Context context, int id) {
         SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();

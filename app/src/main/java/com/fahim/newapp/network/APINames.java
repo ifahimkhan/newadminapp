@@ -12,6 +12,11 @@ public interface APINames {
     public String Delete_SUBJECT_API="deleteSubject";
 
     public String READ_BOOK_API="readBook";
+    public String UPDATE_BOOK_API="updateBook";
+    public String CREATE_BOOK_API="createBook";
+    public String Delete_BOOK_API="deleteSubject";
+
+
 
 
 }

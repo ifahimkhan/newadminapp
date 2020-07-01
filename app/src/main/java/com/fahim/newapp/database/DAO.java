@@ -207,7 +207,7 @@ public class DAO implements DataBaseInterface {
 
                 db.setTransactionSuccessful();
             } catch (Exception e) {
-                //System.out.println("Exception while inserting into  table" + e);
+                System.out.println("Exception while inserting into  table" + e);
             } finally {
                 db.endTransaction();
                 db.close();
@@ -558,6 +558,26 @@ public class DAO implements DataBaseInterface {
             }
         }
     }
+    public void deleteBookIDRows(int id) {
+
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+                db.delete(TABLE_BOOKS_HOLDER, BOOKS_ID + "=?", new String[]{String.valueOf(id)});
+
+                db.setTransactionSuccessful();
+
+            } catch (Exception e) {
+
+                //System.out.println("Exception" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+    }
 
     public void deleteAllBooksRows() {
 
@@ -602,7 +622,7 @@ public class DAO implements DataBaseInterface {
                     mHolder.setId(c.getInt(c.getColumnIndex(BOOKS_ID)));
                     mHolder.setStandardid(c.getInt(c.getColumnIndex(BOOKS_STANDARD_ID)));
                     mHolder.setSubjectid(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
-                    mHolder.setViewCount(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setViewCount(c.getInt(c.getColumnIndex(BOOKS_VIEW_COUNT)));
                     mHolder.setBookname(c.getString(c.getColumnIndex(BOOKS_NAME)));
                     mHolder.setBooklink(c.getString(c.getColumnIndex(BOOKS_LINK)));
 

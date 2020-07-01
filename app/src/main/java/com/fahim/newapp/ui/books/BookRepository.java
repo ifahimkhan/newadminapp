@@ -162,6 +162,7 @@ public class BookRepository {
         }
         return data;
     }
+
     public LiveData<List<BookHolder>> callReadBook(boolean callapi) {
 
         final MutableLiveData<List<BookHolder>> data = new MutableLiveData<>();
@@ -179,14 +180,16 @@ public class BookRepository {
                             .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
                     if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+//                        Log.e(TAG, "onResponse: "+call.request().url() );
+//                        Log.e(TAG, "onResponse: "+new Gson().toJson(response.body()) );
                         DAO.getInstance().deleteAllBooksRows();
                         DAO.getInstance().insertBookList(response.body().getResponse());
 
-                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
+                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
 //                        data.setValue(response.body().getResponse());
                     } else {
-                        data.setValue(null);
+                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(context.getString(R.string.t_no_book_found))
                                 .setContentText(response.body().getMessage())
@@ -210,45 +213,42 @@ public class BookRepository {
                             .setConfirmClickListener(null)
                             .changeAlertType(SweetAlertDialog.ERROR_TYPE);
                     Log.e(TAG, "onFailure: " + call.request().url() + call.request().body());
-                    data.setValue(null);
+                    data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
 
                 }
             });
         } else {
-//            data.setValue(null);
-            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
+            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
         }
         return data;
     }
 
 
-
-    public LiveData<List<SubjectHolder>> callDeleteSubject() {
+    public LiveData<List<BookHolder>> callDeleteBook() {
         loadingDialog.show();
-        final MutableLiveData<List<SubjectHolder>> data = new MutableLiveData<>();
-        apiCall.callDeleteSubject(APINames.Delete_SUBJECT_API, preferences.getSelectedSubjectId(context))
+        final MutableLiveData<List<BookHolder>> data = new MutableLiveData<>();
+        apiCall.callDeleteBook(APINames.Delete_BOOK_API, preferences.getSelectedBookId(context))
                 .enqueue(new Callback<ResponseSubjectHolder>() {
                     @Override
                     public void onResponse(Call<ResponseSubjectHolder> call, Response<ResponseSubjectHolder> response) {
-
-                        loadingDialog
-                                .setTitleText(context.getString(R.string.w_success))
-                                .setConfirmText(context.getString(R.string.w_ok))
-                                .setConfirmClickListener(null)
-                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-
-                        Log.e(TAG, "onResponse: "+new Gson().toJson(response.body()));
                         if (response.body().isStatus()) {
 
-                            DAO.getInstance().deleteSubjectIDRows(preferences.getSelectedSubjectId(context));
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            loadingDialog
+                                    .setTitleText(context.getString(R.string.w_success))
+                                    .setContentText(response.body().getMessage())
+                                    .setConfirmText(context.getString(R.string.w_ok))
+                                    .setConfirmClickListener(null)
+                                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                            DAO.getInstance().deleteBookIDRows(preferences.getSelectedBookId(context));
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
 
 
                         } else {
-                            data.setValue(null);
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
                             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText(context.getString(R.string.t_no_sub_found))
+                                    .setTitleText(context.getString(R.string.t_no_book_found))
                                     .setContentText(response.body().getMessage())
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
@@ -268,7 +268,7 @@ public class BookRepository {
                                 .setConfirmText(context.getString(R.string.w_ok))
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        data.setValue(null);
+                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
 
 
                     }
@@ -277,13 +277,19 @@ public class BookRepository {
         return data;
     }
 
-    public LiveData<List<SubjectHolder>> callEditStandard() {
+
+    public LiveData<List<BookHolder>> callEditBook() {
         loadingDialog.show();
-        final MutableLiveData<List<SubjectHolder>> data = new MutableLiveData<>();
-        apiCall.callEditSubject(APINames.UPDATE_SUBJECT_API, preferences.getSelectedSubjectName(context), preferences.getSelectedSubjectId(context))
-                .enqueue(new Callback<ResponseSubjectHolder>() {
+        final MutableLiveData<List<BookHolder>> data = new MutableLiveData<>();
+        BookHolder mBookHolder = new BookHolder();
+        mBookHolder.setBooklink(preferences.getSelectedBookLink(context));
+        mBookHolder.setBookname(preferences.getSelectedBookName(context));
+        mBookHolder.setId(preferences.getSelectedBookId(context));
+
+        apiCall.callEditBook(APINames.UPDATE_BOOK_API, mBookHolder)
+                .enqueue(new Callback<ResponseBookHolder>() {
                     @Override
-                    public void onResponse(Call<ResponseSubjectHolder> call, Response<ResponseSubjectHolder> response) {
+                    public void onResponse(Call<ResponseBookHolder> call, Response<ResponseBookHolder> response) {
 
                         loadingDialog
                                 .setTitleText(context.getString(R.string.w_success))
@@ -293,14 +299,14 @@ public class BookRepository {
 
                         if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
 
-                            DAO.getInstance().deleteAllSubjectRows();
-                            DAO.getInstance().insertSubjectList(response.body().getResponse());
+                            DAO.getInstance().deleteAllBooksRows();
+                            DAO.getInstance().insertBookList(response.body().getResponse());
 
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
 
                         } else {
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
                             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText(context.getString(R.string.t_no_sub_found))
@@ -317,13 +323,13 @@ public class BookRepository {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseSubjectHolder> call, Throwable t) {
+                    public void onFailure(Call<ResponseBookHolder> call, Throwable t) {
                         loadingDialog
                                 .setTitleText(context.getString(R.string.failed))
                                 .setConfirmText(context.getString(R.string.w_ok))
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
 
                     }
@@ -332,14 +338,13 @@ public class BookRepository {
         return data;
     }
 
-    public LiveData<List<SubjectHolder>> callCreateSubject() {
+    public LiveData<List<BookHolder>> callCreateBook(BookHolder bookHolder) {
         loadingDialog.show();
-        final MutableLiveData<List<SubjectHolder>> data = new MutableLiveData<>();
-        apiCall.callCreateSubject(APINames.CREATE_SUBJECT_API,
-                preferences.getSelectedSubjectName(context), preferences.getSelectedStandardId(context))
-                .enqueue(new Callback<ResponseSubjectHolder>() {
+        final MutableLiveData<List<BookHolder>> data = new MutableLiveData<>();
+        apiCall.callCreateBook(APINames.CREATE_BOOK_API,bookHolder)
+                .enqueue(new Callback<ResponseBookHolder>() {
                     @Override
-                    public void onResponse(Call<ResponseSubjectHolder> call, Response<ResponseSubjectHolder> response) {
+                    public void onResponse(Call<ResponseBookHolder> call, Response<ResponseBookHolder> response) {
 
                         loadingDialog
                                 .setTitleText(context.getString(R.string.w_success))
@@ -349,13 +354,13 @@ public class BookRepository {
 
                         if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
 
-                            DAO.getInstance().deleteAllSubjectRows();
-                            DAO.getInstance().insertSubjectList(response.body().getResponse());
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            DAO.getInstance().deleteAllBooksRows();
+                            DAO.getInstance().insertBookList(response.body().getResponse());
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
 
 
                         } else {
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
                             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText(context.getString(R.string.t_no_std_found))
                                     .setContentText(response.body().getMessage())
@@ -371,13 +376,13 @@ public class BookRepository {
                     }
 
                     @Override
-                    public void onFailure(Call<ResponseSubjectHolder> call, Throwable t) {
+                    public void onFailure(Call<ResponseBookHolder> call, Throwable t) {
                         loadingDialog
                                 .setTitleText(context.getString(R.string.failed))
                                 .setConfirmText(context.getString(R.string.w_ok))
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context),preferences.getSelectedSubjectId(context)));
 
 
                     }

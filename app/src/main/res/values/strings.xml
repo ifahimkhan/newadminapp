@@ -43,5 +43,6 @@
     <string name="t_deleted">Deleted</string>
     <string name="t_edit_subject">Edit Subject</string>
     <string name="t_no_book_found">No Books Available</string>
+    <string name="hint_enter_book_link">Enter Book Link</string>
 
 </resources>

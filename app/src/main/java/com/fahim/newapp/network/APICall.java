@@ -1,6 +1,7 @@
 package com.fahim.newapp.network;
 
 
+import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.ResponseBookHolder;
 import com.fahim.newapp.holder.ResponseStandardHolder;
 import com.fahim.newapp.holder.ResponseSubjectHolder;
@@ -52,9 +53,18 @@ public interface APICall {
     @GET("index.php")
     Call<ResponseSubjectHolder> callDeleteSubject(@Query("api") String api, @Query("id") int id);
 
-//BOOK TABLE
+    //BOOK TABLE
     @GET("index.php")
     Call<ResponseBookHolder> callReadBook(@Query("api") String api);
+
+    @POST("index.php")
+    Call<ResponseBookHolder> callEditBook(@Query("api") String api, @Body BookHolder bookHolder);
+
+    @POST("index.php")
+    Call<ResponseBookHolder> callCreateBook(@Query("api") String createBookApi, @Body BookHolder bookHolder);
+
+    @GET("index.php")
+    Call<ResponseSubjectHolder> callDeleteBook(@Query("api")String delete_book_api,@Query("id") int selectedBookId);
 
     /*
     @GET("ValidateUser")
