@@ -45,4 +45,15 @@
     <string name="t_no_book_found">No Books Available</string>
     <string name="hint_enter_book_link">Enter Book Link</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="novels">Novels</string>
+    <string name="admin">Admin</string>
+    <string name="video">Video</string>
+    <string name="fav">Favourite</string>
+    <string name="s_download_failed">Download Failed!</string>
+    <string name="t_downloading">Downloading...</string>
+    <string name="cannot_open_zip_file">Cannot Open Zip File Download First!</string>
+
+
 </resources>

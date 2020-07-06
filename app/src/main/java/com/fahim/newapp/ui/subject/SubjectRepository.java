@@ -19,7 +19,6 @@ import com.fahim.newapp.network.RetrofitConfig;
 import com.fahim.newapp.utils.Preferences;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -124,7 +123,7 @@ public class SubjectRepository {
                         DAO.getInstance().deleteAllSubjectRows();
                         DAO.getInstance().insertSubjectList(response.body().getResponse());
 
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
                     } else {
                         data.setValue(null);
@@ -157,7 +156,7 @@ public class SubjectRepository {
                 }
             });
         } else {
-            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
         }
         return data;
     }
@@ -180,7 +179,7 @@ public class SubjectRepository {
                         if (response.body().isStatus()) {
 
                             DAO.getInstance().deleteSubjectIDRows(preferences.getSelectedSubjectId(context));
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
 
                         } else {
@@ -234,11 +233,11 @@ public class SubjectRepository {
                             DAO.getInstance().deleteAllSubjectRows();
                             DAO.getInstance().insertSubjectList(response.body().getResponse());
 
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
 
                         } else {
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
                             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText(context.getString(R.string.t_no_sub_found))
@@ -261,7 +260,7 @@ public class SubjectRepository {
                                 .setConfirmText(context.getString(R.string.w_ok))
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
 
                     }
@@ -289,11 +288,11 @@ public class SubjectRepository {
 
                             DAO.getInstance().deleteAllSubjectRows();
                             DAO.getInstance().insertSubjectList(response.body().getResponse());
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
 
                         } else {
-                            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
                             new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText(context.getString(R.string.t_no_std_found))
                                     .setContentText(response.body().getMessage())
@@ -315,7 +314,7 @@ public class SubjectRepository {
                                 .setConfirmText(context.getString(R.string.w_ok))
                                 .setConfirmClickListener(null)
                                 .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
 
                     }

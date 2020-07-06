@@ -66,6 +66,9 @@ public interface APICall {
     @GET("index.php")
     Call<ResponseSubjectHolder> callDeleteBook(@Query("api")String delete_book_api,@Query("id") int selectedBookId);
 
+    @Streaming
+    @GET
+    Call<ResponseBody> downloadFileByUrl(@Url String fileUrl);
     /*
     @GET("ValidateUser")
     Call<LoginResponseModel> validateUser(@Query("User_Name") String userName);

@@ -41,6 +41,10 @@ public class BooksViewModel extends ViewModel {
         bookRepository.setLoadingDialog();
         return bookRepository.callReadSubject(callapi);
     }
+    public LiveData<List<SubjectHolder>> getAllSubjectHolder(boolean callapi) {
+        bookRepository.setLoadingDialog();
+        return bookRepository.callAllReadSubject(callapi);
+    }
     public LiveData<List<BookHolder>> getBookHolder(boolean callapi) {
         bookRepository.setLoadingDialog();
         return bookRepository.callReadBook(callapi);

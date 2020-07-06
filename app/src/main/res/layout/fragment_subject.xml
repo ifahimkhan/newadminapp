@@ -47,8 +47,7 @@
                         android:paddingTop="@dimen/_4sdp"
                         android:paddingBottom="@dimen/_4sdp"
                         android:text="@string/title_standard"
-                        android:textColor="@color/google_red"
-                        android:textCursorDrawable="@color/google_red"
+                        android:textColor="@color/gray_btn_bg_color"
                         android:textSize="@dimen/_16sdp" />
 
                     <Spinner

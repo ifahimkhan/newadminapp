@@ -459,7 +459,7 @@ public class DAO implements DataBaseInterface {
         }
     }
 
-    public ArrayList<SubjectHolder> getAllSubject(int std) {
+    public ArrayList<SubjectHolder> getAllSubjectWithId(int std) {
         {
             synchronized (DBHelpers.lock) {
 
@@ -471,6 +471,41 @@ public class DAO implements DataBaseInterface {
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 Cursor c = db.rawQuery(new StringBuffer(SELECT_SUBJECT_DATA).append(" where ")
                         .append(SUBJECT_STANDARD_ID).append(" = ").append(std).toString(), null);
+                list.clear();
+                if (c.moveToFirst()) {
+                    do {
+                        //assigning values
+                        mHolder = new SubjectHolder();
+
+                        mHolder.setId(c.getInt(c.getColumnIndex(STANDARD_ID)));
+                        mHolder.setStandard_id(c.getInt(c.getColumnIndex(SUBJECT_STANDARD_ID)));
+                        mHolder.setSubject_name(c.getString(c.getColumnIndex(SUBJECT_NAME)));
+
+
+                        //Do something Here with values
+                        list.add(mHolder);
+                    } while (c.moveToNext());
+                }
+                c.close();
+                db.close();
+
+
+                return list;
+            }
+        }
+    }
+
+    public ArrayList<SubjectHolder> getAllSubject() {
+        {
+            synchronized (DBHelpers.lock) {
+
+
+                ArrayList<SubjectHolder> list = new ArrayList<>();
+
+                SubjectHolder mHolder;
+
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                Cursor c = db.rawQuery(new StringBuffer(SELECT_SUBJECT_DATA).toString(), null);
                 list.clear();
                 if (c.moveToFirst()) {
                     do {
@@ -558,6 +593,7 @@ public class DAO implements DataBaseInterface {
             }
         }
     }
+
     public void deleteBookIDRows(int id) {
 
         synchronized (DBHelpers.lock) {

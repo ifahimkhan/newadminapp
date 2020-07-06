@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_books"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="Books" />
+        <item
+            android:id="@+id/nav_novels"
+            android:icon="@drawable/ic_book_black_24dp"
+            android:title="Novels" />
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Admin" />
+        <!-- <item
+             android:id="@+id/nav_access_control"
+             android:icon="@mipmap/ic_list_profiles"
+             android:title="Access Control" />
+         <item
+             android:id="@+id/nav_profiles"
+             android:icon="@mipmap/ic_list_profiles"
+             android:title="Profiles" />-->
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@mipmap/ic_nav_sett"
+            android:title="Settings" />
+
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@mipmap/ic_action_about"
+            android:title="About" />
+    </group>
+
+</menu>

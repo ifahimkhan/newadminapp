@@ -47,11 +47,12 @@
                         android:paddingTop="@dimen/_4sdp"
                         android:paddingBottom="@dimen/_4sdp"
                         android:text="@string/title_standard"
-                        android:textColor="@color/google_red"
-                        android:textCursorDrawable="@color/google_red"
+                        android:textColor="@color/gray_btn_bg_color"
                         android:textSize="@dimen/_16sdp" />
 
                     <Spinner
+                        android:gravity="center"
+                        android:drawSelectorOnTop="true"
                         android:layout_gravity="center_vertical"
                         android:id="@+id/standard_spinner_b"
                         android:layout_width="0dp"
@@ -96,11 +97,12 @@
                         android:paddingTop="@dimen/_4sdp"
                         android:paddingBottom="@dimen/_4sdp"
                         android:text="@string/title_subject"
-                        android:textColor="@color/google_red"
-                        android:textCursorDrawable="@color/google_red"
+                        android:textColor="@color/gray_btn_bg_color"
                         android:textSize="@dimen/_16sdp" />
 
                     <Spinner
+                        android:gravity="center"
+                        android:drawSelectorOnTop="true"
                         android:layout_gravity="center_vertical"
                         android:id="@+id/subject_spinner_b"
                         android:layout_width="0dp"

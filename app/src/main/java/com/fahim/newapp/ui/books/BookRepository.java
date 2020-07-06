@@ -19,7 +19,6 @@ import com.fahim.newapp.network.APICall;
 import com.fahim.newapp.network.APINames;
 import com.fahim.newapp.network.RetrofitConfig;
 import com.fahim.newapp.utils.Preferences;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class BookRepository {
                         DAO.getInstance().insertStandardList(response.body().getResponse());
                         data.setValue(response.body().getResponse());
                     } else {
-                        data.setValue(null);
+                        data.setValue(DAO.getInstance().getAllStandard());
                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText(context.getString(R.string.t_no_std_found))
                                 .setContentText(response.body().getMessage())
@@ -94,7 +93,7 @@ public class BookRepository {
                             .setConfirmText(context.getString(R.string.w_ok))
                             .setConfirmClickListener(null)
                             .changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                    data.setValue(null);
+                    data.setValue(DAO.getInstance().getAllStandard());
 
 
                 }
@@ -125,7 +124,7 @@ public class BookRepository {
                         DAO.getInstance().deleteAllSubjectRows();
                         DAO.getInstance().insertSubjectList(response.body().getResponse());
 
-                        data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+                        data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
 
                     } else {
                         data.setValue(null);
@@ -158,7 +157,65 @@ public class BookRepository {
                 }
             });
         } else {
-            data.setValue(DAO.getInstance().getAllSubject(preferences.getSelectedStandardId(context)));
+            data.setValue(DAO.getInstance().getAllSubjectWithId(preferences.getSelectedStandardId(context)));
+        }
+        return data;
+    }
+
+    public LiveData<List<SubjectHolder>> callAllReadSubject(boolean callapi) {
+
+        final MutableLiveData<List<SubjectHolder>> data = new MutableLiveData<>();
+
+        if (callapi) {
+            loadingDialog.show();
+            apiCall.callReadSubject(APINames.READ_SUBJECT_API).enqueue(new Callback<ResponseSubjectHolder>() {
+                @Override
+                public void onResponse(Call<ResponseSubjectHolder> call, Response<ResponseSubjectHolder> response) {
+
+                    loadingDialog
+                            .setTitleText(context.getString(R.string.w_success))
+                            .setConfirmText(context.getString(R.string.w_ok))
+                            .setConfirmClickListener(null)
+                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
+                    if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+                        DAO.getInstance().deleteAllSubjectRows();
+                        DAO.getInstance().insertSubjectList(response.body().getResponse());
+
+                        data.setValue(DAO.getInstance().getAllSubject());
+
+                    } else {
+                        data.setValue(DAO.getInstance().getAllSubject());
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText(context.getString(R.string.t_no_sub_found))
+                                .setContentText(response.body().getMessage())
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseSubjectHolder> call, Throwable t) {
+                    loadingDialog
+                            .setTitleText(context.getString(R.string.failed))
+                            .setConfirmText(context.getString(R.string.w_ok))
+                            .setConfirmClickListener(null)
+                            .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                    Log.e(TAG, "onFailure: " + call.request().url() + call.request().body());
+                    data.setValue(DAO.getInstance().getAllSubject());
+
+
+                }
+            });
+        } else {
+            data.setValue(DAO.getInstance().getAllSubject());
         }
         return data;
     }
