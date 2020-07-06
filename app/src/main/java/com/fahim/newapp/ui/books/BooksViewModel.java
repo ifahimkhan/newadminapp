@@ -63,4 +63,16 @@ public class BooksViewModel extends ViewModel {
         bookRepository.setLoadingDialog();
         return bookRepository.callDeleteBook();
     }
+    public LiveData<List<Integer>> favBookList(){
+        return bookRepository.callFavBookList();
+    }
+    public LiveData<List<Integer>> deleteFavBook(){
+        bookRepository.deleteFavBook();
+        return bookRepository.callFavBookList();
+    }
+    public LiveData<List<Integer>> addToFavBook(){
+        bookRepository.addFavBook();
+        return bookRepository.callFavBookList();
+    }
+
 }

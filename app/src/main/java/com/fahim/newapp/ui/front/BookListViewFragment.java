@@ -67,6 +67,7 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
     DownloadZipFileTask downloadZipFileTask;
     private File sdcard = Environment.getExternalStorageDirectory();
     private String remainingPath;
+    private List<Integer> favbookList = new ArrayList<>();
 
 
     public BookListViewFragment() {
@@ -97,7 +98,7 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        bookAdapter = new BookListViewAdapter(getActivity(), bookHolderList, this);
+        bookAdapter = new BookListViewAdapter(getActivity(), bookHolderList, favbookList, this);
         recyclerView.setAdapter(bookAdapter);
         return view;
     }
@@ -106,7 +107,6 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        readBookData(false);
         refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -114,6 +114,15 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
             }
         };
         swipeRefreshLayout.setOnRefreshListener(refreshListener);
+        booksViewModel.favBookList().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+            @Override
+            public void onChanged(List<Integer> integers) {
+                favbookList.clear();
+                favbookList.addAll(integers);
+                bookAdapter.notifyDataSetChanged();
+            }
+        });
+        readBookData(false);
 
     }
 
@@ -125,12 +134,40 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
                 fileDownload(preferences.getSelectedBookLink(getActivity()));
                 break;
             case R.id.add_to_fav:
+                addToFav();
                 break;
             case R.id.book_name:
                 openWithoutDownload();
                 break;
         }
 
+    }
+
+    private void addToFav() {
+        if (favbookList.contains(preferences.getSelectedBookId(getActivity()))) {
+
+            booksViewModel.deleteFavBook().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+                @Override
+                public void onChanged(List<Integer> integers) {
+                    favbookList.clear();
+                    favbookList.addAll(integers);
+                    bookAdapter.setFavList(favbookList);
+                    bookAdapter.notifyDataSetChanged();
+                }
+            });
+        } else {
+            booksViewModel.addToFavBook().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+                @Override
+                public void onChanged(List<Integer> integers) {
+                    Log.e("TAG", "onChanged: " + integers.toString());
+                    favbookList.clear();
+                    favbookList.addAll(integers);
+                    bookAdapter.setFavList(favbookList);
+                    bookAdapter.notifyDataSetChanged();
+                }
+            });
+
+        }
     }
 
     private void openWithoutDownload() {
@@ -285,7 +322,7 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
                     }
                 } else {
 
-                    bookAdapter = new BookListViewAdapter(getActivity(), holders, BookListViewFragment.this);
+                    bookAdapter = new BookListViewAdapter(getActivity(), holders, favbookList, BookListViewFragment.this);
                     recyclerView.setAdapter(bookAdapter);
                     bookAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
@@ -329,10 +366,11 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
                 if (progress[0].second > 0) {
                     final int currentProgress = (int) ((double) progress[0].first / (double) progress[0].second * 100);
 
+                    Log.e("TAG", "onProgressUpdate: " + currentProgress);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            sweetAlertDialog.setTitleText(getString(R.string.t_downloading) + currentProgress);
+                            sweetAlertDialog.getProgressHelper().setProgress(currentProgress);
                         }
                     });
                 }
@@ -530,12 +568,17 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
                     fileSizeDownloaded += read;
 
                     Log.d("TAG", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Pair<Integer, Long> pairs = new Pair<>((int) fileSizeDownloaded, fileSize);
+                    downloadZipFileTask.doProgress(pairs);
                 }
 
                 outputStream.flush();
-
+                Pair<Integer, Long> pairs = new Pair<>(100, 100L);
+                downloadZipFileTask.doProgress(pairs);
                 return true;
             } catch (IOException e) {
+                Pair<Integer, Long> pairs = new Pair<>(-1, (long) -1);
+                downloadZipFileTask.doProgress(pairs);
                 return false;
             } finally {
                 if (inputStream != null) {

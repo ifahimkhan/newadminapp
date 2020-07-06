@@ -6,6 +6,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.StandardHolder;
 import com.fahim.newapp.holder.SubjectHolder;
@@ -674,6 +676,198 @@ public class DAO implements DataBaseInterface {
             return list;
         }
 
+
+    }
+
+    public ArrayList<Integer> getAllFavouriteBooksId() {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<Integer> list = new ArrayList<>();
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer("SELECT ").append(FAV_BOOKS_ID).append(" FROM ").append(TABLE_FAV_HOLDER)
+                    .toString(), null);
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    //Do something Here with values
+                    list.add(c.getInt(c.getColumnIndex(FAV_BOOKS_ID)));
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
+
+
+    }
+
+    public void addToFavouriteBooks(int bookid) {
+
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+                ContentValues values = new ContentValues();
+                values.put(FAV_BOOKS_ID, bookid);
+                // Inserting Row
+                db.insert(TABLE_FAV_HOLDER, null, values);
+
+                //System.out.println("Stopped Inserting");
+
+
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                System.out.println("Exception while inserting into  table" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+
+    }
+
+    public void deleteFavouriteBook(int bookid) {
+
+        synchronized (DBHelpers.lock) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            try {
+                db.beginTransaction();
+
+                db.delete(TABLE_FAV_HOLDER, FAV_BOOKS_ID + "=?", new String[]{String.valueOf(bookid)});
+
+                db.setTransactionSuccessful();
+
+            } catch (Exception e) {
+
+                //System.out.println("Exception" + e);
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+    }
+
+    public int getNovelID() {
+        synchronized (DBHelpers.lock) {
+            int novelId = 0;
+            String novel = NOVELS;
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer("SELECT ").append(STANDARD_ID).append(" FROM ").append(TABLE_STANDARD_HOLDER)
+                    .append(" WHERE ").append(STANDARD_NAME).append(" = ").append('"' + novel + '"')
+                    .toString(), null);
+
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    //Do something Here with values
+                    novelId = c.getInt(c.getColumnIndex(STANDARD_ID));
+
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return novelId;
+        }
+
+    }
+
+    public ArrayList<BookHolder> getAllFavouriteBooks(int novelStandardId) {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<BookHolder> list = new ArrayList<>();
+
+            BookHolder mHolder;
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer(SELECT_BOOK_DATA).append(" where ")
+                    .append(BOOKS_STANDARD_ID).append(" <> ").append(novelStandardId)
+                    .append(" AND ")
+                    .append(BOOKS_ID).append(" IN ( ").append("SELECT ").append(FAV_BOOKS_ID).append(" FROM ")
+                    .append(TABLE_FAV_HOLDER).append(" ) ").toString(), null);
+
+            Log.e("DAO", "getAllFavouriteBooks: " + c.getCount());
+
+            Log.e("DAO", "getAllFavouriteBooks: " + new StringBuffer(SELECT_BOOK_DATA).append(" where ")
+                    .append(BOOKS_STANDARD_ID).append(" <> ").append(novelStandardId)
+                    .append(" AND ")
+                    .append(BOOKS_ID).append(" IN ( ").append("SELECT ").append(FAV_BOOKS_ID).append(" FROM ")
+                    .append(TABLE_FAV_HOLDER).append(" ) ").toString());
+
+
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    mHolder = new BookHolder();
+
+                    mHolder.setId(c.getInt(c.getColumnIndex(BOOKS_ID)));
+                    mHolder.setStandardid(c.getInt(c.getColumnIndex(BOOKS_STANDARD_ID)));
+                    mHolder.setSubjectid(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setViewCount(c.getInt(c.getColumnIndex(BOOKS_VIEW_COUNT)));
+                    mHolder.setBookname(c.getString(c.getColumnIndex(BOOKS_NAME)));
+                    mHolder.setBooklink(c.getString(c.getColumnIndex(BOOKS_LINK)));
+
+
+                    //Do something Here with values
+                    list.add(mHolder);
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
+
+    }
+
+    public ArrayList<BookHolder> getAllFavouriteNovels(int novelStandardId) {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<BookHolder> list = new ArrayList<>();
+
+            BookHolder mHolder;
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer(SELECT_BOOK_DATA).append(" where ")
+                    .append(BOOKS_STANDARD_ID).append(" = ").append(novelStandardId)
+                    .append(" AND ")
+                    .append(BOOKS_ID).append(" IN ( ").append("SELECT ").append(FAV_BOOKS_ID).append(" FROM ")
+                    .append(TABLE_FAV_HOLDER).append(" ) ").toString(), null);
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    mHolder = new BookHolder();
+
+                    mHolder.setId(c.getInt(c.getColumnIndex(BOOKS_ID)));
+                    mHolder.setStandardid(c.getInt(c.getColumnIndex(BOOKS_STANDARD_ID)));
+                    mHolder.setSubjectid(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setViewCount(c.getInt(c.getColumnIndex(BOOKS_VIEW_COUNT)));
+                    mHolder.setBookname(c.getString(c.getColumnIndex(BOOKS_NAME)));
+                    mHolder.setBooklink(c.getString(c.getColumnIndex(BOOKS_LINK)));
+
+
+                    //Do something Here with values
+                    list.add(mHolder);
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
 
     }
 }

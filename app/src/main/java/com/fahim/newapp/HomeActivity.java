@@ -1,4 +1,4 @@
-package com.fahim.newapp.ui;
+package com.fahim.newapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -8,19 +8,22 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.fahim.newapp.MainActivity;
+import com.fahim.newapp.AdminActivity;
+import com.fahim.newapp.FavouriteActivity;
 import com.fahim.newapp.R;
+import com.fahim.newapp.database.DAO;
 import com.fahim.newapp.ui.front.BookListViewFragment;
 import com.fahim.newapp.ui.front.BooksExpandableFragment;
 import com.fahim.newapp.ui.front.NovelsExpandableFragment;
 import com.fahim.newapp.ui.front.ShowHomeFragment;
+import com.fahim.newapp.utils.Preferences;
 import com.google.android.material.navigation.NavigationView;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +51,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -59,7 +65,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 selectItem(R.id.nav_books);
                 break;
             case R.id.nav_admin:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, AdminActivity.class));
+                break;
+            case R.id.nav_fav:
+                startActivity(new Intent(this, FavouriteActivity.class));
                 break;
             case R.id.nav_settings:
 //                startActivity(new Intent(this, MainActivity.class));
@@ -91,13 +100,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_books:
                 fragment = BooksExpandableFragment.newInstance();
                 break;
-
-            case R.id.nav_admin:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
             case R.id.nav_settings:
                 fragment = ShowHomeFragment.newInstance();
                 break;
+
+
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -107,10 +114,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             //being displayed and adding the same to the backstack will result in redundancy
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else if(position==1){
+        } else if (position == 1) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack("expandable").commit();
 
-        } else{
+        } else {
             //Pop the back stack since we want to maintain only one level of the back stack
             //Add the transaction to the back stack since we want the state to be preserved in the back stack
             //if (position != 9)
@@ -138,7 +145,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void adminClicked(View view) {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, AdminActivity.class));
     }
 
     public void settClicked(View view) {
@@ -148,5 +155,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void favClicked(View view) {
+        startActivity(new Intent(this, FavouriteActivity.class));
     }
 }

@@ -1,6 +1,7 @@
 package com.fahim.newapp.ui.front;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.fahim.newapp.R;
+import com.fahim.newapp.database.DAO;
+import com.fahim.newapp.utils.Preferences;
 
 public class ShowHomeFragment extends Fragment {
     public ShowHomeFragment() {
@@ -31,6 +34,17 @@ public class ShowHomeFragment extends Fragment {
         return inflater.inflate(R.layout.home_layout, container, false);
     }
 
+    Preferences preferences = new Preferences();
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (preferences.getNovelsId(getActivity()) == 0) {
+            preferences.putNovelsId(getActivity(), DAO.getInstance().getNovelID());
+            Log.e("ShowHomeF", "onResume: " + preferences.getNovelsId(getActivity()));
+        }
+
+    }
 
 
 }

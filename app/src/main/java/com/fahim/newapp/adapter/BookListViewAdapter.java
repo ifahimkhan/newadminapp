@@ -28,12 +28,19 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
     private AdapterClickListener listener;
     private String Dir = Environment.getExternalStorageDirectory().getAbsolutePath();
     private String folder = "";
+    private List<Integer> favList;
 
-    public BookListViewAdapter(Context context, List<BookHolder> userList, AdapterClickListener listener) {
+    public void setFavList(List<Integer> favList) {
+        this.favList = favList;
+    }
+
+    public BookListViewAdapter(Context context, List<BookHolder> userList, List<Integer> favList, AdapterClickListener listener) {
         this.context = context;
         this.holdersList = userList;
         this.listener = listener;
+        this.favList = favList;
         folder = this.context.getString(R.string.app_name);
+
     }
 
     @NonNull
@@ -47,7 +54,7 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final BookHolder model = holdersList.get(position);
 
         holder.txtname.setText(model.getBookname());
@@ -60,11 +67,17 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
             holder.download.setImageResource(R.drawable.ic_baseline_cloud_download_24);
 
         }
+        if (favList.contains(model.getId())) {
+            holder.addtofav.setImageResource(R.drawable.staradded);
+        } else {
+            holder.addtofav.setImageResource(R.drawable.star);
+        }
 
         holder.addtofav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preferences.putSelectedBookId(context, model.getId());
+                preferences.putPosition(context, position);
                 listener.onClick(R.id.add_to_fav);
             }
         });

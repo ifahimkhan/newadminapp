@@ -20,12 +20,14 @@ import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.StandardHolder;
 import com.fahim.newapp.holder.SubjectHolder;
 import com.fahim.newapp.ui.books.BooksViewModel;
-import com.fahim.newapp.ui.HomeActivity;
+import com.fahim.newapp.HomeActivity;
 import com.fahim.newapp.utils.Preferences;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.fahim.newapp.database.DataBaseInterface.NOVELS;
 
 public class BooksExpandableFragment extends Fragment {
 
@@ -163,7 +165,7 @@ public class BooksExpandableFragment extends Fragment {
 //                                    expandableListTitle.add(standardHolder.getStandardName());
                                         subjectHolders.add(holders);
                                 }
-                                if (!standardHolder.getStandardName().toLowerCase().contains(getString(R.string.novels).toLowerCase())) {
+                                if (!standardHolder.getStandardName().toLowerCase().contains(NOVELS.toLowerCase())) {
                                     expandableListTitle.add(standardHolder.getStandardName());
                                     expandableListDetail.put(standardHolder.getStandardName(), subjectHolders);
                                 }

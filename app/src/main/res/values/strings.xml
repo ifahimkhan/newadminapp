@@ -54,6 +54,9 @@
     <string name="s_download_failed">Download Failed!</string>
     <string name="t_downloading">Downloading...</string>
     <string name="cannot_open_zip_file">Cannot Open Zip File Download First!</string>
+    <string name="title_activity_favourite">FavouriteActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 
 
 </resources>

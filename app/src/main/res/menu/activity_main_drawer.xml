@@ -16,10 +16,11 @@
             android:id="@+id/nav_admin"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="Admin" />
-        <!-- <item
-             android:id="@+id/nav_access_control"
-             android:icon="@mipmap/ic_list_profiles"
-             android:title="Access Control" />
+        <item
+            android:id="@+id/nav_fav"
+            android:icon="@drawable/fav"
+            android:title="Favourite" />
+        <!--
          <item
              android:id="@+id/nav_profiles"
              android:icon="@mipmap/ic_list_profiles"

@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,17 +27,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.Interface.FragmentClickListener;
-import com.fahim.newapp.MainActivity;
+import com.fahim.newapp.AdminActivity;
 import com.fahim.newapp.R;
 import com.fahim.newapp.adapter.BookAdapter;
 import com.fahim.newapp.adapter.CustomSpinnerStandardAdapter;
 import com.fahim.newapp.adapter.CustomSpinnerSubjectAdapter;
-import com.fahim.newapp.adapter.SubjectAdapter;
 import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.holder.StandardHolder;
 import com.fahim.newapp.holder.SubjectHolder;
-import com.fahim.newapp.ui.subject.SubjectFragment;
-import com.fahim.newapp.ui.subject.SubjectViewModel;
 import com.fahim.newapp.utils.Preferences;
 import com.fahim.newapp.utils.QustomDialogBuilder;
 
@@ -71,7 +67,7 @@ public class BooksFragment extends Fragment implements FragmentClickListener, Ad
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Log.e("TAG", "onAttach: ");
-        ((MainActivity) getActivity()).setFragmentClickListener(this);
+        ((AdminActivity) getActivity()).setFragmentClickListener(this);
         manager = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
     }
 

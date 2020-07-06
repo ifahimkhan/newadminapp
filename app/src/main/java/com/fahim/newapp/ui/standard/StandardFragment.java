@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -22,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.Interface.FragmentClickListener;
-import com.fahim.newapp.MainActivity;
+import com.fahim.newapp.AdminActivity;
 import com.fahim.newapp.R;
 import com.fahim.newapp.adapter.StandardAdapter;
 import com.fahim.newapp.holder.StandardHolder;
@@ -48,7 +47,7 @@ public class StandardFragment extends Fragment implements AdapterClickListener, 
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Log.e("TAG", "onAttach: ");
-        ((MainActivity) getActivity()).setFragmentClickListener(this);
+        ((AdminActivity) getActivity()).setFragmentClickListener(this);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

@@ -9,13 +9,13 @@ import com.fahim.newapp.application.MyApplication;
 import com.fahim.newapp.holder.BookHolder;
 
 
-public class DBHelpers extends SQLiteOpenHelper  implements DataBaseInterface {
+public class DBHelpers extends SQLiteOpenHelper implements DataBaseInterface {
 
     private static final String TAG = DBHelpers.class.getSimpleName();
 
     private static final String DB_NAME = "myAppDatabase.db";
 
-    private static final int DB_VERSION_NO = 2;
+    private static final int DB_VERSION_NO = 3;
 
 
     private static DBHelpers mInstance = null;
@@ -26,10 +26,10 @@ public class DBHelpers extends SQLiteOpenHelper  implements DataBaseInterface {
 
 
         super(context, DB_NAME, null, DB_VERSION_NO);
-        if (context==null){
-            Log.e(TAG, "getInstance: NULL" );
-        }else{
-            Log.e(TAG, "getInstance: NOT NULL" );
+        if (context == null) {
+            Log.e(TAG, "getInstance: NULL");
+        } else {
+            Log.e(TAG, "getInstance: NOT NULL");
 
         }
     }
@@ -78,41 +78,13 @@ public class DBHelpers extends SQLiteOpenHelper  implements DataBaseInterface {
                 .append(");").toString());
 
 
-
         upgradeVersion2(db);
+        upgradeVersion3(db);
 
 
     }
 
-    private void upgradeVersion2(SQLiteDatabase db) {
 
-        db.execSQL("ALTER TABLE " + TABLE_BOOKS_HOLDER + " ADD " + BOOKS_NAME + " VARCHAR(20);");
-
-    }
-
-/*
-    private void upgradeVersion3(SQLiteDatabase db) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MOVE_HOLDER);
-        db.execSQL(" CREATE TABLE " + TABLE_MOVE_HOLDER +
-                " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                STOCK_ASSETID + " VARCHAR(20), " +
-                STOCK_LOCATION + " VARCHAR(20), " +
-                STOCK_BUILDING + " VARCHAR(20), " +
-                STOCK_FLOOR + " VARCHAR(20), " +
-                MOVE_REASON + " VARCHAR(20)" +
-                ");");
-
-        db.execSQL("ALTER TABLE " + TABLE_TOTAL_STOCK_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_MISSING_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_TEMP_STOCK_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_PROCESS_STOCK_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_FOUND_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_EXTRA_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_MISSMATCH_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-        db.execSQL("ALTER TABLE " + TABLE_ASSET_STOCK_HOLDER + " ADD " + STOCK_ROOM + " VARCHAR(20);");
-
-    }
-*/
 
 
     @Override
@@ -121,10 +93,29 @@ public class DBHelpers extends SQLiteOpenHelper  implements DataBaseInterface {
        /* if (oldVersion < 4) {
             upgradeVersion3(db);
         }*/
-        Log.e(TAG, "onUpgrade: "+oldVersion);
-       if (oldVersion<2){
-           upgradeVersion2(db);
-       }
+        Log.e(TAG, "onUpgrade: " + oldVersion);
+        switch (oldVersion) {
+            case 1:
+                upgradeVersion2(db);
+            case 2:
+                upgradeVersion3(db);
+
+                break;
+        }
+
+    }
+    private void upgradeVersion2(SQLiteDatabase db) {
+
+        db.execSQL("ALTER TABLE " + TABLE_BOOKS_HOLDER + " ADD " + BOOKS_NAME + " VARCHAR(20);");
+
+    }
+
+    private void upgradeVersion3(SQLiteDatabase db) {
+        db.execSQL(new StringBuilder(" CREATE TABLE ").append(TABLE_FAV_HOLDER)
+                .append(" (").append(_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT,")
+                .append(FAV_BOOKS_ID).append(" INTEGER UNIQUE")
+                .append(");").toString());
+
     }
 
 
