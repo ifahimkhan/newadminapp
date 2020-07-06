@@ -1,28 +1,19 @@
-package com.fahim.newapp.ui.main;
+package com.fahim.newapp.ui.favourite;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.fahim.newapp.R;
 import com.fahim.newapp.database.DAO;
 import com.fahim.newapp.holder.BookHolder;
-import com.fahim.newapp.holder.ResponseBookHolder;
 import com.fahim.newapp.network.APICall;
-import com.fahim.newapp.network.APINames;
 import com.fahim.newapp.network.RetrofitConfig;
 import com.fahim.newapp.utils.Preferences;
 
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 class FavTabRepository {
     private APICall apiCall;

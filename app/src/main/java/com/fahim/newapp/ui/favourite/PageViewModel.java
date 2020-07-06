@@ -1,4 +1,4 @@
-package com.fahim.newapp.ui.main;
+package com.fahim.newapp.ui.favourite;
 
 import android.content.Context;
 
@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.fahim.newapp.database.DAO;
 import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.utils.Preferences;
 

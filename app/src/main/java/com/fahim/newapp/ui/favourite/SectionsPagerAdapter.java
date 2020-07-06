@@ -1,4 +1,4 @@
-package com.fahim.newapp.ui.main;
+package com.fahim.newapp.ui.favourite;
 
 import android.content.Context;
 
@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.fahim.newapp.R;
-import com.fahim.newapp.ui.front.BooksExpandableFragment;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
