@@ -12,8 +12,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:foreground="@drawable/bg_list_row">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/book_name"
@@ -22,47 +21,62 @@
                 android:layout_alignLeft="@id/download"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/download"
                 android:ellipsize="marquee"
+                android:foreground="@drawable/bg_list_row"
                 android:padding="@dimen/_14sdp"
                 android:text="CLASS VII"
                 android:textColor="@color/grey_75"
                 android:textSize="@dimen/_14sdp" />
+            <ImageView
+                android:id="@+id/option"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_1sdp"
+                android:visibility="visible"
+                app:srcCompat="@drawable/ic_baseline_more_vert_24" />
 
             <ImageView
+
                 android:id="@+id/add_to_fav"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_alignRight="@id/book_name"
                 android:layout_alignParentRight="true"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_15sdp"
                 android:soundEffectsEnabled="true"
                 android:src="@drawable/star" />
 
             <ImageView
                 android:id="@+id/download"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_40sdp"
+                android:layout_marginEnd="@dimen/_41sdp"
                 android:visibility="visible"
                 app:srcCompat="@drawable/ic_baseline_cloud_download_24" />
 
             <ImageView
                 android:id="@+id/downloaddelete"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_80sdp"
+                android:layout_marginEnd="@dimen/_61sdp"
                 android:visibility="gone"
                 app:srcCompat="@drawable/ic_clean" />
 

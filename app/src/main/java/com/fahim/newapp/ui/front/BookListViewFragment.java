@@ -359,24 +359,34 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
 
             Log.e("API123", progress[0].second + " ");
 
-            if (progress[0].first == 100)
+            if (progress[0].first == 100) {
+                sweetAlertDialog
+                        .setTitleText(getActivity().getString(R.string.w_success))
+                        .setConfirmText(getActivity().getString(R.string.w_ok))
+                        .setConfirmClickListener(null)
+                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+            }
 //                Toast.makeText(getApplicationContext(), getString(R.string.s_file_downloaded_sucess), Toast.LENGTH_SHORT).show();
 
 
-                if (progress[0].second > 0) {
-                    final int currentProgress = (int) ((double) progress[0].first / (double) progress[0].second * 100);
+            if (progress[0].second > 0) {
+                final int currentProgress = (int) ((double) progress[0].first / (double) progress[0].second * 100);
 
-                    Log.e("TAG", "onProgressUpdate: " + currentProgress);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            sweetAlertDialog.getProgressHelper().setProgress(currentProgress);
-                        }
-                    });
-                }
+                Log.e("TAG", "onProgressUpdate: " + currentProgress);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        sweetAlertDialog.getProgressHelper().setProgress(currentProgress);
+                    }
+                });
+            }
 
             if (progress[0].first == -1) {
-                Toast.makeText(getActivity(), getString(R.string.s_download_failed), Toast.LENGTH_SHORT).show();
+                sweetAlertDialog
+                        .setTitleText(getActivity().getString(R.string.e_error))
+                        .setConfirmText(getActivity().getString(R.string.w_ok))
+                        .setConfirmClickListener(null)
+                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
             }
 
         }
@@ -389,11 +399,7 @@ public class BookListViewFragment extends Fragment implements AdapterClickListen
         @Override
         protected void onPostExecute(String result) {
 
-            sweetAlertDialog
-                    .setTitleText(getActivity().getString(R.string.w_success))
-                    .setConfirmText(getActivity().getString(R.string.w_ok))
-                    .setConfirmClickListener(null)
-                    .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+
             bookAdapter.notifyDataSetChanged();
 
         }

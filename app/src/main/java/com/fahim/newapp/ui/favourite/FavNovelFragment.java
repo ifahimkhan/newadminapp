@@ -88,49 +88,38 @@ public class FavNovelFragment extends Fragment implements FragmentClickListener,
 
     }
 
-
     @Override
     public void onClick(int id) {
 
         switch (id) {
-            case R.id.edit_book:
-                Log.e("TAG", "onClick: edit_subject ");
-
+            case R.id.download:
+//                fileDownload(preferences.getSelectedBookLink(getActivity()));
                 break;
-            case R.id.delete_book:
-                final SweetAlertDialog dialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE);
-                dialog.setTitleText(getString(R.string.t_are_you_sure));
-                dialog.setContentText(getString(R.string.s_wont_be_able_to_recover));
-                dialog.setCancelText(getString(R.string.dialog_cancel));
-                dialog.showCancelButton(true);
-                dialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismissWithAnimation();
-                    }
-                });
-                dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(final SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismissWithAnimation();
-
-
-                    }
-                });
-                dialog.show();
-                Log.e("TAG", "onClick: delete_subject ");
-
+            case R.id.add_to_fav:
+                addToFav();
                 break;
-            case R.id.floatingbuttonbooks:
-                Log.e("TAG", "onClick: floatingbuttonsubject ");
-
-
-                break;
-            default:
-                Log.e(TAG, "onClick: " + "default");
+            case R.id.book_name:
+//                openWithoutDownload();
                 break;
         }
 
+    }
+
+    private void addToFav() {
+        if (favbookList.contains(preferences.getSelectedBookId(getActivity()))) {
+
+            pageViewModel.deleteFavBook().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+                @Override
+                public void onChanged(List<Integer> integers) {
+                    favbookList.clear();
+                    favbookList.addAll(integers);
+                    bookAdapter.setFavList(favbookList);
+                    bookHolderArrayList.remove(preferences.getPosition(getActivity()));
+                    bookAdapter.notifyDataSetChanged();
+
+                }
+            });
+        }
     }
 
 

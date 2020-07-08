@@ -870,4 +870,76 @@ public class DAO implements DataBaseInterface {
         }
 
     }
+
+    public ArrayList<BookHolder> getSearchListByText(String text) {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<BookHolder> list = new ArrayList<>();
+
+            BookHolder mHolder;
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer(SELECT_BOOK_DATA)
+                    .append(" where ").append(BOOKS_NAME).append(" =  ").append('"' + text + '"')
+                    .toString(), null);
+           /* Cursor c = db.query(TABLE_BOOKS_HOLDER, new String[] {BOOKS_NAME }, BOOKS_NAME + "=?",
+                    new String[] { text }, null, null, null, "10");
+          */
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+                    //assigning values
+                    mHolder = new BookHolder();
+
+                    mHolder.setId(c.getInt(c.getColumnIndex(BOOKS_ID)));
+                    mHolder.setStandardid(c.getInt(c.getColumnIndex(BOOKS_STANDARD_ID)));
+                    mHolder.setSubjectid(c.getInt(c.getColumnIndex(Books_SUBJECT_ID)));
+                    mHolder.setViewCount(c.getInt(c.getColumnIndex(BOOKS_VIEW_COUNT)));
+                    mHolder.setBookname(c.getString(c.getColumnIndex(BOOKS_NAME)));
+                    mHolder.setBooklink(c.getString(c.getColumnIndex(BOOKS_LINK)));
+
+
+                    //Do something Here with values
+                    list.add(mHolder);
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
+
+    }
+
+    public ArrayList<String> getSearchListHolder() {
+        synchronized (DBHelpers.lock) {
+
+
+            ArrayList<String> list = new ArrayList<>();
+
+
+            SQLiteDatabase db = dbHelper.getReadableDatabase();
+            Cursor c = db.rawQuery(new StringBuffer("SELECT ").append(BOOKS_NAME).append(" FROM ").append(TABLE_BOOKS_HOLDER)
+                    .toString(), null);
+           /* Cursor c = db.query(TABLE_BOOKS_HOLDER, new String[] {BOOKS_NAME }, BOOKS_NAME + "=?",
+                    new String[] { text }, null, null, null, "10");
+          */
+            list.clear();
+            if (c.moveToFirst()) {
+                do {
+
+                    //Do something Here with values
+                    list.add(c.getString(c.getColumnIndex(BOOKS_NAME)));
+                } while (c.moveToNext());
+            }
+            c.close();
+            db.close();
+
+
+            return list;
+        }
+
+    }
 }

@@ -1,12 +1,18 @@
 package com.fahim.newapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -99,6 +105,12 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
                 listener.onClick(R.id.book_name);
             }
         });
+        holder.option.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.showContextMenu();
+            }
+        });
     }
 
     @Override
@@ -107,9 +119,9 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
     }
 
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         private TextView txtname;
-        private ImageView addtofav, download, downloadDelete;
+        private ImageView addtofav, download, downloadDelete, option;
 
 
         ViewHolder(@NonNull View itemView) {
@@ -118,8 +130,35 @@ public class BookListViewAdapter extends RecyclerView.Adapter<BookListViewAdapte
             addtofav = itemView.findViewById(R.id.add_to_fav);
             download = itemView.findViewById(R.id.download);
             downloadDelete = itemView.findViewById(R.id.downloaddelete);
+            option = itemView.findViewById(R.id.option);
+            option.setOnCreateContextMenuListener(this);
 
 
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            MenuItem Edit = menu.add(Menu.NONE, 1, 1, "Share");
+            Edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case 1:
+                            Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+                            whatsappIntent.setType("text/plain");
+                            whatsappIntent.putExtra(Intent.EXTRA_TEXT, holdersList.get(getAdapterPosition()).booklink);
+                            try {
+                                context.startActivity(Intent.createChooser(whatsappIntent, "Share"));
+                            } catch (android.content.ActivityNotFoundException ex) {
+                                Toast.makeText(context, "No App Found", Toast.LENGTH_LONG).show();
+                            }
+
+
+                            break;
+                    }
+                    return true;
+                }
+            });
         }
     }
 }

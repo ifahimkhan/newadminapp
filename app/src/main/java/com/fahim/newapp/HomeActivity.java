@@ -23,6 +23,8 @@ import com.fahim.newapp.ui.front.BookListViewFragment;
 import com.fahim.newapp.ui.front.BooksExpandableFragment;
 import com.fahim.newapp.ui.front.NovelsExpandableFragment;
 import com.fahim.newapp.ui.front.ShowHomeFragment;
+import com.fahim.newapp.ui.search.SearchFragment;
+import com.fahim.newapp.utils.PermissionUtil;
 import com.fahim.newapp.utils.Preferences;
 import com.google.android.material.navigation.NavigationView;
 
@@ -31,6 +33,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     DrawerLayout mDrawerLayout;
     private NavigationView navigationView;
+    private PermissionUtil permissionUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        permissionUtil = new PermissionUtil(this);
+        permissionUtil.requestStoragePermission();
 
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -52,8 +57,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -63,6 +66,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_books:
                 selectItem(R.id.nav_books);
+                break;
+            case R.id.nav_search:
+                selectItem(R.id.nav_search);
                 break;
             case R.id.nav_admin:
                 startActivity(new Intent(this, AdminActivity.class));
@@ -102,6 +108,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_settings:
                 fragment = ShowHomeFragment.newInstance();
+                break;
+            case R.id.nav_search:
+                fragment = SearchFragment.newInstance();
                 break;
 
 
@@ -156,5 +165,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     public void favClicked(View view) {
         startActivity(new Intent(this, FavouriteActivity.class));
+    }
+
+    public void searchClicked(View view) {
+        selectItem(R.id.nav_search);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -13,13 +14,19 @@
             android:icon="@drawable/ic_book_black_24dp"
             android:title="Novels" />
         <item
-            android:id="@+id/nav_admin"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="Admin" />
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="Search" />
+
+
         <item
             android:id="@+id/nav_fav"
             android:icon="@drawable/fav"
             android:title="Favourite" />
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Admin" />
         <!--
          <item
              android:id="@+id/nav_profiles"
