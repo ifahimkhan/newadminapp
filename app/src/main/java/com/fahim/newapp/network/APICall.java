@@ -69,6 +69,9 @@ public interface APICall {
     @Streaming
     @GET
     Call<ResponseBody> downloadFileByUrl(@Url String fileUrl);
+
+    @GET("index.php")
+    Call<ResponseBookHolder> callReadBookSearch(@Query("api")String searchApi, @Query("s")String text);
     /*
     @GET("ValidateUser")
     Call<LoginResponseModel> validateUser(@Query("User_Name") String userName);

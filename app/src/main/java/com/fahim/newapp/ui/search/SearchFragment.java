@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,10 +36,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fahim.newapp.AdminActivity;
+import com.fahim.newapp.HomeActivity;
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.Interface.FragmentClickListener;
 import com.fahim.newapp.R;
 import com.fahim.newapp.adapter.BookAdapter;
+import com.fahim.newapp.adapter.BookListViewAdapter;
 import com.fahim.newapp.adapter.CustomSpinnerStandardAdapter;
 import com.fahim.newapp.adapter.CustomSpinnerSubjectAdapter;
 import com.fahim.newapp.holder.BookHolder;
@@ -62,15 +66,18 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 public class SearchFragment extends Fragment implements FragmentClickListener, AdapterClickListener {
 
     private Preferences preferences = new Preferences();
-    private RecyclerView recyclerView;
     private ListView listView;
-    private CustomSpinnerStandardAdapter standardAdapter;
-    private CustomSpinnerSubjectAdapter subjectAdapter;
     private TextInputLayout textInputLayout;
     private SearchViewModel searchViewModel;
     private ArrayList<String> searchList = new ArrayList<>();
     private ArrayList<String> holderList = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
+    private ViewSwitcher viewSwitcher;
+    private RecyclerView recyclerView;
+    private BookListViewAdapter bookListViewAdapter;
+    private List<BookHolder> bookHolderList = new ArrayList<>();
+    private List<Integer> favBookList = new ArrayList<>();
+
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -87,10 +94,7 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
 
         listView = root.findViewById(R.id.search_list);
         textInputLayout = root.findViewById(R.id.textField);
-        /*recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);*/
+
 
         return root;
     }
@@ -103,10 +107,11 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
             @Override
             public void onChanged(ArrayList<String> strings) {
                 searchList.clear();
+                holderList.clear();
                 searchList.addAll(strings);
-                Log.e(TAG, "searchList: "+searchList.size() );
                 holderList.addAll(strings);
-                arrayAdapter=new ArrayAdapter<String>(getActivity(),R.layout.list_items,R.id.expandedListItem,holderList);
+                Log.e(TAG, "searchList: " + searchList.size());
+                arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_items, R.id.expandedListItem, holderList);
                 listView.setAdapter(arrayAdapter);
                 arrayAdapter.notifyDataSetChanged();
             }
@@ -125,7 +130,6 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
             @Override
             public void afterTextChanged(Editable s) {
                 getListValues(s.toString());
-
             }
         });
         textInputLayout.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -133,6 +137,7 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Log.e(TAG, "onClick: " + textInputLayout.getEditText().getText().toString());
+                    callNextFragment(textInputLayout.getEditText().getText().toString());
                     return true;
                 }
                 return false;
@@ -142,9 +147,18 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
             @Override
             public void onClick(View v) {
                 Log.e(TAG, "search icon: " + textInputLayout.getEditText().getText().toString());
+                callNextFragment(textInputLayout.getEditText().getText().toString());
 
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                callNextFragment(holderList.get(position));
+            }
+        });
+
 
     }
 
@@ -161,9 +175,18 @@ public class SearchFragment extends Fragment implements FragmentClickListener, A
             if (s.toLowerCase().contains(text.toLowerCase()))
                 holderList.add(s);
         }
-        Log.e(TAG, "getListValues: "+holderList.size() );
+        Log.e(TAG, "getListValues: " + holderList.size());
 
         arrayAdapter.notifyDataSetChanged();
+    }
+
+    private void callNextFragment(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            preferences.putSearchBook(getActivity(), text);
+            ((HomeActivity) getActivity()).selectItem(R.id.search_for);
+
+        }
+
     }
 
 

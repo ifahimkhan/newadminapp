@@ -16,6 +16,8 @@ public interface APINames {
     public String CREATE_BOOK_API="createBook";
     public String Delete_BOOK_API="deleteSubject";
 
+    public String SEARCH_BOOK_API="searchBook";
+
 
 
 

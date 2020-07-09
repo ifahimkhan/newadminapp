@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/_8sdp"
+    android:padding="@dimen/_4sdp"
     tools:context=".ui.standard.StandardFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,15 +18,17 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_marginLeft="@dimen/_4sdp"
                 android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginRight="@dimen/_4sdp"
                 android:layout_marginBottom="@dimen/_4sdp"
                 android:background="@color/white"
                 android:elevation="@dimen/_2sdp"
+                android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+                android:paddingRight="?android:attr/expandableListPreferredChildPaddingLeft"
                 app:cardBackgroundColor="#AAFFFFFF">
 
 
@@ -35,6 +37,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/serach"
+                    android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"
+                    android:paddingRight="?android:attr/expandableListPreferredChildPaddingLeft"
                     app:endIconDrawable="@drawable/ic_baseline_search_24"
                     app:endIconMode="custom">
 

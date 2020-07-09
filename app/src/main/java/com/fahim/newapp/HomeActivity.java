@@ -23,7 +23,9 @@ import com.fahim.newapp.ui.front.BookListViewFragment;
 import com.fahim.newapp.ui.front.BooksExpandableFragment;
 import com.fahim.newapp.ui.front.NovelsExpandableFragment;
 import com.fahim.newapp.ui.front.ShowHomeFragment;
+import com.fahim.newapp.ui.login.LoginFragment;
 import com.fahim.newapp.ui.search.SearchFragment;
+import com.fahim.newapp.ui.search.SearchListFragment;
 import com.fahim.newapp.utils.PermissionUtil;
 import com.fahim.newapp.utils.Preferences;
 import com.google.android.material.navigation.NavigationView;
@@ -71,7 +73,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 selectItem(R.id.nav_search);
                 break;
             case R.id.nav_admin:
-                startActivity(new Intent(this, AdminActivity.class));
+//                startActivity(new Intent(this, AdminActivity.class));
+                selectItem(R.id.nav_admin);
                 break;
             case R.id.nav_fav:
                 startActivity(new Intent(this, FavouriteActivity.class));
@@ -112,6 +115,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_search:
                 fragment = SearchFragment.newInstance();
                 break;
+            case R.id.search_for:
+                fragment = SearchListFragment.newInstance();
+                break;
+            case R.id.nav_admin:
+                fragment = LoginFragment.newInstance();
+                break;
 
 
         }
@@ -123,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             //being displayed and adding the same to the backstack will result in redundancy
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else if (position == 1) {
+        } else if (position == 1 || position==R.id.search_for) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, TAG_CONTENT_FRAGMENT).addToBackStack("expandable").commit();
 
         } else {

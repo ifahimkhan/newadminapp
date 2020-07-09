@@ -1,15 +1,25 @@
-package com.fahim.newapp.ui.favourite;
+package com.fahim.newapp.ui.search;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,81 +29,96 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fahim.newapp.Interface.AdapterClickListener;
 import com.fahim.newapp.Interface.FragmentClickListener;
 import com.fahim.newapp.R;
 import com.fahim.newapp.adapter.BookListViewAdapter;
 import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.utils.Preferences;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavBookFragment extends Fragment implements FragmentClickListener, AdapterClickListener {
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
-    private PageViewModel pageViewModel;
+public class SearchListFragment extends Fragment implements FragmentClickListener, AdapterClickListener {
+
     private Preferences preferences = new Preferences();
+    private SearchViewModel searchViewModel;
     private RecyclerView recyclerView;
-    private BookListViewAdapter bookAdapter;
-    private ArrayList<BookHolder> bookHolderArrayList = new ArrayList<>();
-    private List<Integer> favbookList = new ArrayList<>();
-    private String TAG = FavBookFragment.class.getSimpleName();
+    private BookListViewAdapter bookListViewAdapter;
+    private List<BookHolder> bookHolderList = new ArrayList<>();
+    private List<Integer> favBookList = new ArrayList<>();
+    private TextView searchfor;
+    private ImageView empty;
     private File sdcard = Environment.getExternalStorageDirectory();
 
-    public static FavBookFragment newInstance() {
-        return new FavBookFragment();
+
+    public static SearchListFragment newInstance() {
+        return new SearchListFragment();
     }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        pageViewModel =
-                ViewModelProviders.of(this).get(PageViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_favourite, container, false);
-        pageViewModel.setContext(getActivity());
+
+        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_search_list, container, false);
+        searchViewModel.setContext(getActivity());
 
 
-        recyclerView = root.findViewById(R.id.recyclerview_book);
-        recyclerView.setHasFixedSize(true);
+        recyclerView = root.findViewById(R.id.recyclerview);
+        searchfor = root.findViewById(R.id.search_for);
+        empty = root.findViewById(R.id.empty);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-        bookAdapter = new BookListViewAdapter(getActivity(), bookHolderArrayList, favbookList, this);
-        recyclerView.setAdapter(bookAdapter);
-
+        bookListViewAdapter = new BookListViewAdapter(getContext(), bookHolderList, favBookList, this);
+        recyclerView.setAdapter(bookListViewAdapter);
+        recyclerView.setHasFixedSize(true);
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        pageViewModel.favBookList().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+
+        searchfor.setText("searched For '" + preferences.getSearchBook(getActivity()) + "'");
+
+        searchViewModel.favBookList().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
             @Override
             public void onChanged(List<Integer> integers) {
-                favbookList.clear();
-                favbookList.addAll(integers);
-                bookAdapter.notifyDataSetChanged();
+                favBookList.clear();
+                favBookList.addAll(integers);
+                bookListViewAdapter.notifyDataSetChanged();
             }
         });
-
-        getBooksData();
-
-
-    }
-
-    private void getBooksData() {
-        pageViewModel.getBookHolderFavList().observe(getViewLifecycleOwner(), new Observer<List<BookHolder>>() {
+        searchViewModel.getSearchData(preferences.getSearchBook(getActivity())).observe(getViewLifecycleOwner(), new Observer<List<BookHolder>>() {
             @Override
             public void onChanged(List<BookHolder> bookHolders) {
-                Log.e(TAG, "onChanged: " + bookHolders.size());
-                bookHolderArrayList.clear();
-                bookHolderArrayList.addAll(bookHolders);
-                bookAdapter = new BookListViewAdapter(getActivity(), bookHolderArrayList, favbookList, FavBookFragment.this);
-                recyclerView.setAdapter(bookAdapter);
-                bookAdapter.notifyDataSetChanged();
+
+                if (bookHolders == null || bookHolders.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
+                    RequestOptions options = new RequestOptions()
+                            .centerCrop();
+
+                    Log.e(TAG, "empty: ");
+                    Glide.with(getActivity()).load("http://tarabeiser.com/ux/imgux/searchEmptyState.png").apply(options).into(empty);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    empty.setVisibility(View.GONE);
+                    bookHolderList.clear();
+                    bookHolderList.addAll(bookHolders);
+                    bookListViewAdapter.notifyDataSetChanged();
+                }
             }
         });
+
     }
 
 
@@ -113,6 +138,7 @@ public class FavBookFragment extends Fragment implements FragmentClickListener, 
         }
 
     }
+
     private void openWithoutDownload() {
         File file = new File(sdcard, File.separator + getString(R.string.app_name) + File.separator + File.separator + preferences.getSelectedBookName(getActivity()) + ".pdf");
         if (file.exists()) {
@@ -152,20 +178,20 @@ public class FavBookFragment extends Fragment implements FragmentClickListener, 
     }
 
     private void addToFav() {
-        if (favbookList.contains(preferences.getSelectedBookId(getActivity()))) {
+        if (!favBookList.contains(preferences.getSelectedBookId(getActivity()))) {
 
-            pageViewModel.deleteFavBook().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
+            searchViewModel.addToFavBook().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
                 @Override
                 public void onChanged(List<Integer> integers) {
-                    favbookList.clear();
-                    favbookList.addAll(integers);
-                    bookAdapter.setFavList(favbookList);
-                    bookHolderArrayList.remove(preferences.getPosition(getActivity()));
-                    bookAdapter.notifyDataSetChanged();
-//                    getBooksData();
-
+                    Log.e("TAG", "onChanged: " + integers.toString());
+                    favBookList.clear();
+                    favBookList.addAll(integers);
+                    bookListViewAdapter.setFavList(favBookList);
+                    bookListViewAdapter.notifyDataSetChanged();
                 }
             });
+        }else{
+            Toast.makeText(getActivity(), R.string.toast_alreadyadded,Toast.LENGTH_LONG).show();
         }
     }
 

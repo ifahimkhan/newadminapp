@@ -70,7 +70,7 @@ public class StandardRepository {
                         data.setValue(response.body().getResponse());
                     } else {
                         data.setValue(null);
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        loadingDialog
                                 .setTitleText(context.getString(R.string.t_no_std_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -79,7 +79,7 @@ public class StandardRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -125,7 +125,7 @@ public class StandardRepository {
 
                 } else {
                     data.setValue(null);
-                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                    loadingDialog
                             .setTitleText(context.getString(R.string.t_no_std_found))
                             .setContentText(response.body().getMessage())
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -134,7 +134,7 @@ public class StandardRepository {
                                     sweetAlertDialog.dismissWithAnimation();
                                 }
                             })
-                            .show();
+                            .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
                 }
             }

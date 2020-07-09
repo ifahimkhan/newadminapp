@@ -1,10 +1,15 @@
 package com.fahim.newapp.ui.favourite;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +26,7 @@ import com.fahim.newapp.adapter.BookListViewAdapter;
 import com.fahim.newapp.holder.BookHolder;
 import com.fahim.newapp.utils.Preferences;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +42,7 @@ public class FavNovelFragment extends Fragment implements FragmentClickListener,
     private BookListViewAdapter bookAdapter;
     private ArrayList<BookHolder> bookHolderArrayList = new ArrayList<>();
     private List<Integer> favbookList = new ArrayList<>();
+    private File sdcard = Environment.getExternalStorageDirectory();
 
     public static FavNovelFragment newInstance() {
         return new FavNovelFragment();
@@ -93,14 +100,52 @@ public class FavNovelFragment extends Fragment implements FragmentClickListener,
 
         switch (id) {
             case R.id.download:
-//                fileDownload(preferences.getSelectedBookLink(getActivity()));
+                openWithoutDownload();
                 break;
             case R.id.add_to_fav:
                 addToFav();
                 break;
             case R.id.book_name:
-//                openWithoutDownload();
+                openWithoutDownload();
                 break;
+        }
+
+    }
+
+    private void openWithoutDownload() {
+        File file = new File(sdcard, File.separator + getString(R.string.app_name) + File.separator + File.separator + preferences.getSelectedBookName(getActivity()) + ".pdf");
+        if (file.exists()) {
+            Uri mpath = Uri.fromFile(file);
+            Log.e("create pdf uri path==>", "" + mpath);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(mpath, "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(Intent.createChooser(intent, "open with"));
+
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(),
+                        "There is no any PDF Viewer",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (preferences.getSelectedBookLink(getActivity()).startsWith("https://drive")) {
+            Intent target = new Intent(Intent.ACTION_VIEW, Uri.parse(preferences.getSelectedBookLink(getActivity())));
+            try {
+                startActivity(target);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), "Please install PDF app", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (preferences.getSelectedBookLink(getActivity()).endsWith("pdf")) {
+            Intent target = new Intent(Intent.ACTION_VIEW, Uri.parse(preferences.getSelectedBookLink(getActivity())));
+            try {
+                startActivity(target);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), "Please install PDF app", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (preferences.getSelectedBookLink(getActivity()).endsWith("zip")) {
+            Toast.makeText(getActivity(), R.string.cannot_open_zip_file, Toast.LENGTH_LONG).show();
         }
 
     }

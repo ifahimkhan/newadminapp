@@ -71,7 +71,7 @@ public class BookRepository {
                         data.setValue(response.body().getResponse());
                     } else {
                         data.setValue(DAO.getInstance().getAllStandard());
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        loadingDialog
                                 .setTitleText(context.getString(R.string.t_no_std_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -80,7 +80,7 @@ public class BookRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -128,7 +128,7 @@ public class BookRepository {
 
                     } else {
                         data.setValue(null);
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        loadingDialog
                                 .setTitleText(context.getString(R.string.t_no_sub_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -137,7 +137,7 @@ public class BookRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -186,7 +186,7 @@ public class BookRepository {
 
                     } else {
                         data.setValue(DAO.getInstance().getAllSubject());
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        loadingDialog
                                 .setTitleText(context.getString(R.string.t_no_sub_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -195,7 +195,7 @@ public class BookRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -247,7 +247,7 @@ public class BookRepository {
 //                        data.setValue(response.body().getResponse());
                     } else {
                         data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        loadingDialog
                                 .setTitleText(context.getString(R.string.t_no_book_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -256,7 +256,7 @@ public class BookRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -304,7 +304,7 @@ public class BookRepository {
 
                         } else {
                             data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
-                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            loadingDialog
                                     .setTitleText(context.getString(R.string.t_no_book_found))
                                     .setContentText(response.body().getMessage())
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -313,7 +313,7 @@ public class BookRepository {
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
                                     })
-                                    .show();
+                                    .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
                         }
                     }
@@ -365,7 +365,7 @@ public class BookRepository {
                         } else {
                             data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
 
-                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            loadingDialog
                                     .setTitleText(context.getString(R.string.t_no_sub_found))
                                     .setContentText(response.body().getMessage())
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -374,7 +374,7 @@ public class BookRepository {
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
                                     })
-                                    .show();
+                                    .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
                         }
                     }
@@ -418,7 +418,7 @@ public class BookRepository {
 
                         } else {
                             data.setValue(DAO.getInstance().getAllBooks(preferences.getSelectedStandardId(context), preferences.getSelectedSubjectId(context)));
-                            new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            loadingDialog
                                     .setTitleText(context.getString(R.string.t_no_std_found))
                                     .setContentText(response.body().getMessage())
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -427,7 +427,7 @@ public class BookRepository {
                                             sweetAlertDialog.dismissWithAnimation();
                                         }
                                     })
-                                    .show();
+                                    .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
                         }
                     }

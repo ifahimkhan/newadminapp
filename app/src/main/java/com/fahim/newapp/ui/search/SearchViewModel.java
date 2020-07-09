@@ -39,4 +39,24 @@ public class SearchViewModel extends ViewModel {
     public LiveData<ArrayList<String>> getsearchList() {
         return searchRepository.getsearchList();
     }
+
+    public LiveData<List<BookHolder>> getSearchData(String text) {
+        searchRepository.setLoadingDialog();
+        return searchRepository.callSearchData(text);
+    }
+
+    public LiveData<List<Integer>> favBookList() {
+        return searchRepository.callFavBookList();
+    }
+
+    public LiveData<List<Integer>> deleteFavBook() {
+        searchRepository.deleteFavBook();
+        return searchRepository.callFavBookList();
+    }
+
+
+    public LiveData<List<Integer>> addToFavBook(){
+        searchRepository.addFavBook();
+        return searchRepository.callFavBookList();
+    }
 }

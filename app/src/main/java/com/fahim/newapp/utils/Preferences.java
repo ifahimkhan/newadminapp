@@ -149,4 +149,15 @@ public class Preferences {
     }
 
 
+    public void putSearchBook(Context context, String str) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstanced(context).edit();
+        editor.putString("putSearchBook", str);
+        editor.apply();
+    }
+
+    public String getSearchBook(Context context) {
+        return getSharedPreferenceInstanced(context).getString("putSearchBook", "");
+    }
+
+
 }

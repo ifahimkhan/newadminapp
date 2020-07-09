@@ -60,20 +60,19 @@ public class SearchRepository {
                 @Override
                 public void onResponse(Call<ResponseStandardHolder> call, Response<ResponseStandardHolder> response) {
 
-                    loadingDialog
-                            .setTitleText(context.getString(R.string.w_success))
-                            .setConfirmText(context.getString(R.string.w_ok))
-                            .setConfirmClickListener(null)
-                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
 
                     if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
                         DAO.getInstance().deleteAllStandardRows();
                         DAO.getInstance().insertStandardList(response.body().getResponse());
                         data.setValue(response.body().getResponse());
+                        loadingDialog
+                                .setTitleText(context.getString(R.string.w_success))
+                                .setConfirmText(context.getString(R.string.w_ok))
+                                .setConfirmClickListener(null)
+                                .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     } else {
                         data.setValue(DAO.getInstance().getAllStandard());
-                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText(context.getString(R.string.t_no_std_found))
+                        loadingDialog.setTitleText(context.getString(R.string.t_no_std_found))
                                 .setContentText(response.body().getMessage())
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
@@ -81,7 +80,7 @@ public class SearchRepository {
                                         sweetAlertDialog.dismissWithAnimation();
                                     }
                                 })
-                                .show();
+                                .changeAlertType(SweetAlertDialog.WARNING_TYPE);
 
 
                     }
@@ -116,5 +115,68 @@ public class SearchRepository {
         final MutableLiveData<ArrayList<String>> data = new MutableLiveData<>();
         data.setValue(DAO.getInstance().getSearchListHolder());
         return data;
+    }
+
+    public LiveData<List<BookHolder>> callSearchData(String text) {
+        final MutableLiveData<List<BookHolder>> data = new MutableLiveData<>();
+
+
+        loadingDialog.show();
+        apiCall.callReadBookSearch(APINames.SEARCH_BOOK_API, text).enqueue(new Callback<ResponseBookHolder>() {
+            @Override
+            public void onResponse(Call<ResponseBookHolder> call, Response<ResponseBookHolder> response) {
+
+
+                if (response.body().isStatus() && response.body().getResponse() != null && response.body().getResponse().size() > 0) {
+                    loadingDialog
+                            .setTitleText(context.getString(R.string.w_success))
+                            .setConfirmText(context.getString(R.string.w_ok))
+                            .setConfirmClickListener(null)
+                            .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    data.setValue(response.body().getResponse());
+
+                } else {
+
+                    data.setValue(null);
+                    loadingDialog
+                            .setTitleText(context.getString(R.string.t_no_book_found))
+                            .setContentText(response.body().getMessage())
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismissWithAnimation();
+                                }
+                            }).changeAlertType(SweetAlertDialog.WARNING_TYPE);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBookHolder> call, Throwable t) {
+                loadingDialog
+                        .setTitleText(context.getString(R.string.failed))
+                        .setConfirmText(context.getString(R.string.w_ok))
+                        .setConfirmClickListener(null)
+                        .changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                data.setValue(null);
+
+            }
+        });
+
+        return data;
+    }
+
+    public LiveData<List<Integer>> callFavBookList() {
+        final MutableLiveData<List<Integer>> data = new MutableLiveData<>();
+        data.setValue(DAO.getInstance().getAllFavouriteBooksId());
+        return data;
+    }
+
+    public void deleteFavBook() {
+        DAO.getInstance().deleteFavouriteBook(preferences.getSelectedBookId(context));
+    }
+    public void addFavBook() {
+        DAO.getInstance().addToFavouriteBooks(preferences.getSelectedBookId(context));
     }
 }
